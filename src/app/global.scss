@@ -1,8 +1,26 @@
+@import "remixicon/fonts/remixicon.css";
 @import "./shortSyles.scss";
 
 :root {
   // FONTS
-  --font-main: "Montserrat", sans-serif;
+  --font-main: "Fira Code", monospace;
+
+  // COLORS
+  --color-primary-black: #01080e;
+  --color-primary-green: #011627;
+  --color-primary-blue: #011221;
+
+  --color-secondary-grey: #607b96;
+  --color-secondary-green: #3c9d93;
+  --color-secondary-blue: #4d5bce;
+  --color-secondary-white: #e5e9f0;
+
+  --color-accent-orange: #fea55f;
+  --color-accent-green: #43d9ad;
+  --color-accent-red: #e99287;
+  --color-accent-purple: #c98bdf;
+
+  --color-border: #01182b;
 }
 
 ::-webkit-scrollbar {
@@ -31,16 +49,25 @@ html {
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--font-main);
   width: 100%;
   height: 100dvh;
-  //   background-color: var(--color-base-dark-high-purple);
+  background-color: var(--color-primary-black);
 }
 
 a {
   text-decoration: none;
   //   color: var(--color-text-primary);
   -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+
+  font-family: var(--font-main);
 }
 
 img,
@@ -50,8 +77,27 @@ span {
   -webkit-tap-highlight-color: transparent;
 }
 
-main {
+.hero {
   @include flex(center, center);
   @include f-direction(column);
+
   width: 100%;
+  height: 100dvh;
+  box-sizing: border-box;
+
+  padding: 45px;
+}
+
+.container {
+  @include flex(flex-start, flex-start);
+  @include f-direction(column);
+
+  width: 100%;
+  height: 100%;
+  gap: 0;
+
+  border-radius: 8px;
+
+  background-color: var(--color-primary-blue);
+  border: 1px solid var(--color-border);
 }

@@ -1,0 +1,234 @@
+@import "@/src/app/shortSyles.scss";
+
+.snake-game {
+  @include flex(center, flex-start);
+  @include f-direction(row);
+
+  width: fit-content;
+  gap: 25px;
+
+  padding: 35px;
+  border-radius: 20px;
+  border: 1px solid #0c1616;
+  background: linear-gradient(
+    150deg,
+    rgba(23, 85, 83, 0.7) 1.7%,
+    rgba(67, 217, 173, 0.09) 81.82%
+  );
+  box-shadow: 0px 2px 0px 0px rgba(255, 255, 255, 0.3) inset;
+  backdrop-filter: blur(32px);
+
+  position: relative;
+
+  .game-board {
+    position: relative;
+    width: 400px;
+    height: 600px;
+    background-color: var(--color-primary-blue);
+    border: 2px solid var(--color-border);
+    display: flex;
+    flex-wrap: wrap;
+
+    border-radius: 8px;
+    background: rgba(1, 22, 39, 0.84);
+    box-shadow: 1px 5px 11px 0px rgba(2, 18, 27, 0.71) inset;
+  }
+
+  .start-button {
+    position: absolute;
+    bottom: 150px;
+    left: 180px;
+
+    padding: 10px 14px;
+
+    background-color: var(--color-accent-orange);
+    color: var(--color-primary-black);
+
+    text-align: right;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 450;
+    line-height: normal;
+
+    border: none;
+    border-radius: 8px;
+  }
+
+  .snake-segment {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    transition: 0.1s; // Плавный переход для изменения прозрачности и градиента
+  }
+
+  .food {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+
+    background-color: var(--color-accent-green);
+
+    -webkit-box-shadow: 0px 0px 5px 5px rgba(67, 217, 173, 0.5);
+    -moz-box-shadow: 0px 0px 5px 5px rgba(67, 217, 173, 0.5);
+    box-shadow: 0px 0px 5px 5px rgba(67, 217, 173, 0.5);
+  }
+
+  .food-count {
+    @include flex(center, center);
+    @include f-direction(row);
+
+    flex-wrap: wrap;
+
+    max-width: 95px;
+
+    gap: 5px;
+
+    .food-indicator {
+      width: 7px;
+      height: 7px;
+
+      border-radius: 10px;
+
+      margin: 5px;
+
+      position: relative;
+
+      background-color: var(--color-accent-green);
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border-radius: 15px;
+        background-color: var(--color-accent-green);
+        opacity: 0.2;
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 21px;
+        height: 21px;
+        border-radius: 22px;
+        background-color: var(--color-accent-green);
+        opacity: 0.1;
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .eaten {
+      opacity: 0.1;
+      transition: 0.3s;
+    }
+  }
+
+  .game-info {
+    @include flex(flex-start, flex-start);
+    @include f-direction(column);
+
+    gap: 20px;
+
+    padding: 13px;
+    border-radius: 8px;
+    background: rgba(1, 20, 35, 0.19);
+
+    .controls {
+      @include flex(center, flex-start);
+      @include f-direction(column);
+
+      gap: 15px;
+
+      .description {
+        @include flex(center, flex-start);
+        @include f-direction(column);
+
+        color: var(--color-secondary-white);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 450;
+        line-height: normal;
+      }
+
+      .arrow-container {
+        @include flex(center, center);
+        @include f-direction(row);
+
+        flex-wrap: wrap;
+        gap: 5px;
+
+        max-width: 180px;
+
+        .arrow {
+          @include flex(center, center);
+
+          width: 50px;
+          height: 28px;
+
+          border-radius: 8px;
+          background-color: var(--color-primary-black);
+          color: var(--color-secondary-white);
+
+          &:first-child {
+            margin: 0 50px;
+          }
+        }
+      }
+    }
+
+    .food-count-container {
+      @include flex(center, flex-start);
+      @include f-direction(column);
+
+      gap: 10px;
+
+      .description {
+        color: var(--color-secondary-white);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 450;
+        line-height: normal;
+      }
+    }
+  }
+
+  .game-over {
+    @include flex(center, center);
+    @include f-direction(column);
+
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 100%;
+
+    gap: 15px;
+
+    background: rgba(1, 22, 39, 0.84);
+    box-shadow: 1px 5px 11px 0px rgba(2, 18, 27, 0.71) inset;
+
+    color: var(--color-accent-green);
+    padding: 12px 0;
+
+    .restart-button {
+      background-color: transparent;
+      border: none;
+
+      color: var(--color-secondary-grey);
+      text-align: center;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 450;
+      line-height: normal;
+    }
+  }
+}
