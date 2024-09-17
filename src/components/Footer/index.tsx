@@ -4,8 +4,17 @@ const Footer = () => {
   return (
     <footer>
       <div className='find-me-box'>
-        <p>_find-me-in</p>
-        <i className='ri-linkedin-fill'></i>
+        <div className='left-site'>
+          <p className='description'>_find-me-in</p>
+          <i className='ri-linkedin-fill'></i>
+          <i className='ri-telegram-fill'></i>
+          <i className='ri-mail-fill'></i>
+        </div>
+        <div className='right-site'>
+          <a className='github-link' href='https://github.com/KostyaDemchenko'>
+            @KostyaDemchenko <i className='ri-github-fill'></i>
+          </a>
+        </div>
       </div>
     </footer>
   );

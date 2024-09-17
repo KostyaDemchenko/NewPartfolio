@@ -30,13 +30,14 @@ const SnakeGame: React.FC = () => {
   const [food, setFood] = useState<Position>(
     generateFood(generateInitialSnake())
   );
-  const [direction, setDirection] = useState<Position | null>(null); // Начальное направление будет null
+  const [direction, setDirection] = useState<Position>({ x: 1, y: 0 }); // Начальное направление
   const [isGameOver, setIsGameOver] = useState(false);
   const [foodEaten, setFoodEaten] = useState(0); // количество съеденной еды
   const [gameStarted, setGameStarted] = useState(false); // отслеживаем, началась ли игра
   const gameBoardRef = useRef<HTMLDivElement>(null);
   const [startTime, setStartTime] = useState<number | null>(null); // время начала игры
   const [elapsedTime, setElapsedTime] = useState<number>(0); // время, затраченное на игру
+  const [directionChanged, setDirectionChanged] = useState(false); // Флаг для отслеживания смены направления
 
   function generateInitialSnake(): Position[] {
     return Array.from({ length: INITIAL_SNAKE_LENGTH }, (_, i) => ({
@@ -46,18 +47,16 @@ const SnakeGame: React.FC = () => {
   }
 
   useEffect(() => {
-    if (isGameOver || !gameStarted) return; // Не обрабатываем нажатия, если игра завершена или не начата
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!gameStarted) {
         startGame(); // Начать игру при нажатии на стрелку
-        return; // выходим, чтобы не обработать нажатие сразу после старта
       }
 
-      if (direction !== null) {
+      if (!directionChanged) {
         const newDirection = getNewDirection(event.key, direction);
         if (newDirection && isValidDirectionChange(newDirection, direction)) {
           setDirection(newDirection); // Мгновенно изменяем направление
+          setDirectionChanged(true); // Устанавливаем флаг, чтобы не регистрировать повторные изменения за один тик
         }
       }
     };
@@ -66,13 +65,14 @@ const SnakeGame: React.FC = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [direction, gameStarted, isGameOver]);
+  }, [direction, gameStarted, directionChanged]);
 
   useEffect(() => {
-    if (isGameOver || !gameStarted || direction === null) return; // Не начинаем игру, если не начата
+    if (isGameOver || !gameStarted) return; // Не начинаем игру, если не начата
 
     const gameInterval = setInterval(() => {
       moveSnake();
+      setDirectionChanged(false); // Сбрасываем флаг после каждого тика
     }, 100); // скорость змейки
 
     return () => clearInterval(gameInterval);
@@ -88,8 +88,8 @@ const SnakeGame: React.FC = () => {
   const moveSnake = () => {
     const newSnake = [...snake];
     const head = {
-      x: newSnake[0].x + (direction?.x || 0),
-      y: newSnake[0].y + (direction?.y || 0),
+      x: newSnake[0].x + direction.x,
+      y: newSnake[0].y + direction.y,
     };
 
     if (checkCollision(head)) {
@@ -129,7 +129,7 @@ const SnakeGame: React.FC = () => {
   const endGame = (win = false) => {
     setIsGameOver(true);
     setGameStarted(false);
-    setDirection(null); // Останавливаем змейку после окончания игры
+    setDirection({ x: 1, y: 0 }); // Сбрасываем направление
     if (win && startTime) {
       setElapsedTime(Date.now() - startTime);
     }
@@ -138,7 +138,7 @@ const SnakeGame: React.FC = () => {
   const resetGame = () => {
     setSnake(generateInitialSnake());
     setFood(generateFood(generateInitialSnake()));
-    setDirection(null); // Сбрасываем направление
+    setDirection({ x: 1, y: 0 }); // Сбрасываем направление
     setGameStarted(false);
     setIsGameOver(false);
     setFoodEaten(0);
@@ -149,7 +149,7 @@ const SnakeGame: React.FC = () => {
 
   const getNewDirection = (
     key: string,
-    currentDirection: Position | null
+    currentDirection: Position
   ): Position | null => {
     switch (key) {
       case "ArrowUp":

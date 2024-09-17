@@ -1,0 +1,83 @@
+@import "@/src/app/shortSyles.scss";
+
+footer {
+  @include flex(center, center);
+
+  width: 100%;
+  height: 50px;
+
+  .find-me-box {
+    @include flex(space-between, center);
+    @include f-direction(row);
+
+    width: 100%;
+    height: 100%;
+
+    border-top: 1px solid var(--color-border);
+
+    .left-site {
+      @include flex(flex-start, center);
+      @include f-direction(row);
+
+      width: fit-content;
+      height: 100%;
+
+      .description {
+        padding: 0 20px;
+        color: var(--color-secondary-grey);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 450;
+        line-height: normal;
+      }
+
+      i {
+        @include flex(center, center);
+        color: var(--color-secondary-grey);
+
+        height: 100%;
+        width: 52px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+
+        &:nth-child(even) {
+          border-right: 1px solid var(--color-border);
+          border-left: 1px solid var(--color-border);
+        }
+
+        &:hover {
+          transform: scale(1.05);
+          color: var(--color-secondary-white);
+          transition: 0.3s ease-in-out;
+        }
+      }
+    }
+
+    .right-site {
+      @include flex(flex-end, center);
+      @include f-direction(row);
+
+      width: fit-content;
+      height: 100%;
+
+      border-left: 1px solid var(--color-border);
+      .github-link {
+        color: var(--color-secondary-grey);
+
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 450;
+        line-height: normal;
+
+        padding: 0 20px;
+
+        transition: 0.3s ease-in-out;
+
+        &:hover {
+          color: var(--color-secondary-white);
+          transition: 0.3s ease-in-out;
+        }
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ import React from "react";
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
-
+import AboutMeMain from "@/src/components/AboutMeMain";
 import SnakeGame from "@/src/components/SnakeGame";
 
 // styles
@@ -13,11 +13,17 @@ import "@/src/app/global.scss";
 export default function Home() {
   return (
     <div className='hero'>
+      {/* Добавляем размытые формы для фона */}
+      <div className='blur-circle-one'></div>
+      <div className='blur-circle-two'></div>
+
       <HeadComponent />
       <section className='container'>
         <Header />
-        <SnakeGame />
-        <main></main>
+        <main className='hero-main'>
+          <AboutMeMain />
+          <SnakeGame />
+        </main>
         <Footer />
       </section>
     </div>

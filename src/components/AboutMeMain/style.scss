@@ -1,0 +1,77 @@
+@import "@/src/app/shortSyles.scss";
+
+.about-me-container {
+  @include flex(center, flex-start);
+  @include f-direction(column);
+
+  max-width: 750px;
+  width: 100%;
+  gap: 80px;
+
+  .about-me-description {
+    @include flex(flex-start, flex-start);
+    @include f-direction(column);
+
+    width: 100%;
+    gap: 0;
+
+    .description {
+      color: var(--color-secondary-white);
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 450;
+      line-height: normal;
+    }
+
+    .name {
+      color: var(--color-secondary-white);
+      font-size: 62px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+
+    .job-title {
+      color: var(--color-secondary-blue);
+      font-family: "Fira Code";
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 450;
+      line-height: normal;
+    }
+  }
+
+  .about-me-links {
+    @include flex(flex-start, flex-start);
+    @include f-direction(column);
+
+    width: 100%;
+    gap: 9px;
+
+    .description {
+      color: var(--color-secondary-grey);
+      font-family: "Fira Code";
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 450;
+      line-height: normal;
+    }
+
+    .github-link {
+      color: var(--color-secondary-white);
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+  }
+}
+
+.description,
+.name,
+.job-title,
+.about-me-links .description,
+.github-link {
+  white-space: pre; // Сохранение пробелов
+  overflow: hidden; // Скрытие переполненного текста
+}
