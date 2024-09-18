@@ -21,8 +21,8 @@ const AboutMeMain = () => {
 
     // Анимация печати для всех текстовых элементов
     startTypingEffect(".description", "Hi all. I am", 70);
-    startTypingEffect(".name", "Kostinatyn Demchenko", 80);
-    startTypingEffect(".job-title", ">Fronted developer", 90);
+    startTypingEffect(".name", "Kostiantyn Demchenko", 80);
+    startTypingEffect(".job-title", ">Frontend developer", 90);
     startTypingEffect(
       ".about-me-links .description",
       "// you can also see my Github page",
