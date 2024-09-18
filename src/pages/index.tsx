@@ -13,14 +13,12 @@ import "@/src/app/global.scss";
 export default function Home() {
   return (
     <div className='hero'>
-      {/* Добавляем размытые формы для фона */}
-      <div className='blur-circle-one'></div>
-      <div className='blur-circle-two'></div>
-
       <HeadComponent />
       <section className='container'>
         <Header />
         <main className='hero-main'>
+          <div className='blur-circle-one'></div>
+          <div className='blur-circle-two'></div>
           <AboutMeMain />
           <SnakeGame />
         </main>
