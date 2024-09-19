@@ -11,16 +11,16 @@ const Nav = () => {
         _hello
       </a>
       <a
+        href='./experience'
+        className={router.pathname === "/experience" ? "active" : ""}
+      >
+        _experience
+      </a>
+      <a
         href='./about-me'
         className={router.pathname === "/about-me" ? "active" : ""}
       >
         _about-me
-      </a>
-      <a
-        href='./projects'
-        className={router.pathname === "/projects" ? "active" : ""}
-      >
-        _projects
       </a>
     </nav>
   );

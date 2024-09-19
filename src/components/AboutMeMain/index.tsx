@@ -1,63 +1,55 @@
-import React, { useEffect } from "react";
-import { TuringType } from "@/src/utils/functions/turingType";
+import React from "react";
+import TuringType from "@/src/components/TuringType"; // Импортируем наш новый компонент
 import "./style.scss";
 
 const AboutMeMain = () => {
-  useEffect(() => {
-    // Обработчик для анимации печати текста
-    const startTypingEffect = (
-      selector: string,
-      text: string,
-      interval: number
-    ) => {
-      const element = document.querySelector(selector) as HTMLElement | null;
-      if (element) {
-        new TuringType(element, text, {
-          interval,
-          accuracy: 0.95,
-        });
-      }
-    };
-
-    // Анимация печати для всех текстовых элементов
-    startTypingEffect(".description", "Hi all. I am", 70);
-    startTypingEffect(".name", "Kostiantyn Demchenko", 80);
-    startTypingEffect(".job-title", ">Frontend developer", 90);
-    startTypingEffect(
-      ".about-me-links .description",
-      "// you can also see my Github page",
-      70
-    );
-
-    // Отдельная анимация для каждого подэлемента в .github-link
-    startTypingEffect(".github-link .blue", "const", 50); // Оставляем пустым
-    startTypingEffect(".github-link .green", "githubLink", 60);
-    startTypingEffect(
-      ".github-link .orange",
-      '"https://github.com/KostyaDemchenko/"',
-      60
-    );
-  }, []); // запускаем один раз после монтирования компонента
-
   return (
     <div className='about-me-container'>
       <div className='about-me-description'>
-        <p className='description'></p>
-        {/* пустой изначально, наполняется текстом с помощью TuringType */}
-        <h1 className='name'></h1>
-        {/* пустой изначально, наполняется текстом с помощью TuringType */}
-        <p className='job-title'></p>
-        {/* пустой изначально, наполняется текстом с помощью TuringType */}
+        {/* Используем TuringType для отображения текста с эффектом печати */}
+        <TuringType
+          el='p'
+          className='description'
+          text='Hi all. I am'
+          speed={70}
+        />
+        <TuringType
+          el='h1'
+          className='name'
+          text='Kostiantyn Demchenko'
+          speed={80}
+        />
+        <TuringType
+          el='p'
+          className='job-title'
+          text='>Frontend developer'
+          speed={90}
+        />
       </div>
       <div className='about-me-links'>
-        <p className='description'></p>
-        {/* пустой изначально, наполняется текстом с помощью TuringType */}
+        <TuringType
+          el='p'
+          className='description'
+          text='// you can also see my Github page'
+          speed={70}
+        />
         <p className='github-link'>
-          <span className='blue'></span> <span className='green'></span>
+          <TuringType el='span' className='blue' text='const' speed={50} />
+          <TuringType
+            el='span'
+            className='green'
+            text='githubLink'
+            speed={60}
+          />
           <span> = </span>
-          <a className='orange' href='https://github.com/KostyaDemchenko/'>
-            {/* Здесь тоже пусто, текст добавляется с помощью TuringType */}
-          </a>
+          <TuringType
+            el='a'
+            className='orange'
+            text='"https://github.com/KostyaDemchenko/"'
+            href='https://github.com/KostyaDemchenko/'
+            target='_blank'
+            speed={60}
+          />
         </p>
       </div>
     </div>

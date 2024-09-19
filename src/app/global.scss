@@ -150,16 +150,13 @@ span {
     gap: 130px;
   }
 
-  // Первая размытая форма
   .blur-circle-one,
   .blur-circle-two {
     position: absolute;
-    width: 300px; // Уменьшение размеров круга
+    width: 300px;
     height: 300px;
     border-radius: 50%;
-    filter: blur(
-      150px
-    ); // Уменьшение размытия, чтобы круг не выходил за пределы
+    filter: blur(150px);
     animation: moveShapes 15s infinite alternate;
   }
 
@@ -167,7 +164,7 @@ span {
   .blur-circle-one {
     background-color: var(--color-secondary-blue);
     top: 10%;
-    left: 15%; // Уменьшаем, чтобы круг не выходил за пределы
+    left: 15%;
     animation-delay: 0s; // для разнообразия анимации
   }
 
@@ -185,7 +182,7 @@ span {
     transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translate(30px, -50px) scale(1.1); // уменьшили движение
+    transform: translate(30px, -50px) scale(1.1);
   }
   100% {
     transform: translate(-50px, 30px) scale(1);
