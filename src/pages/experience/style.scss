@@ -1,1 +1,5 @@
 @import "@/src/app/shortSyles.scss";
+
+.hero-main {
+  @include flex(center, flex-start);
+}
