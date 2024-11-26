@@ -2,4 +2,5 @@
 
 .hero-main {
   @include flex(center, flex-start);
+  gap: 0;
 }
