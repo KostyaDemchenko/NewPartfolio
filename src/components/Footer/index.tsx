@@ -21,8 +21,7 @@ const Footer = () => {
             <i className='ri-telegram-fill'></i>
           </a>
           <a
-            href='mailto:kostiantyn.demchenko.work@gmail.com
-'
+            href='mailto:kostiantyn.demchenko.work@gmail.com'
             className='social-link'
             target='_blank'
           >

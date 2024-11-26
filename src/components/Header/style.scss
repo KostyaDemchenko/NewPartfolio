@@ -19,8 +19,10 @@ header {
 
     padding: 18px 22px;
 
-    width: 400px;
+    max-width: 350px;
+    width: 100%;
     text-wrap: nowrap;
+    flex-wrap: 0;
   }
 
   .left-site {

@@ -1,0 +1,87 @@
+@import "@/src/app/shortSyles.scss";
+
+.accordion-container {
+  max-width: 350px;
+  width: 100%;
+  border-right: 1px solid var(--color-border);
+  background-color: var(--color-primary-blue);
+}
+
+.accordion-item {
+  border-bottom: 1px solid var(--color-border);
+
+  .accordion-trigger {
+    @include flex(flex-start, center);
+    width: 100%;
+    padding: 10px 14px;
+    gap: 10px;
+    background-color: var(--color-primary-blue);
+    color: var(--color-secondary-grey);
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+
+    i {
+      transition: 0.3s;
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    p {
+      flex-grow: 1; // Чтобы текст занимал всё доступное пространство
+      margin: 0;
+      overflow: hidden; // Обрезка текста
+      white-space: nowrap; // Запрет на перенос строки
+      text-overflow: ellipsis; // Отображение многоточия
+    }
+
+    &.open i {
+      transform: rotate(90deg);
+    }
+
+    &:hover {
+      color: var(--color-accent-green);
+    }
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 16px;
+
+    &.open {
+      max-height: 200px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 10px 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 10px;
+
+        a {
+          display: block;
+          color: var(--color-secondary-grey);
+          text-decoration: none;
+          transition: 0.3s;
+          overflow: hidden; // Обрезка текста
+          white-space: nowrap; // Запрет на перенос строки
+          text-overflow: ellipsis; // Отображение многоточия
+
+          i {
+            margin-right: 10px;
+          }
+
+          &:hover {
+            color: var(--color-accent-green);
+          }
+        }
+      }
+    }
+  }
+}
