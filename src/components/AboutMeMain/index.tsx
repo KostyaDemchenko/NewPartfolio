@@ -38,7 +38,7 @@ const AboutMeMain = () => {
           <TuringType
             el='span'
             className='green'
-            text='githubLink'
+            text=' githubLink'
             speed={60}
           />
           <span> = </span>
