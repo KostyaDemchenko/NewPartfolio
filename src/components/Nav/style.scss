@@ -20,10 +20,16 @@ nav {
     padding: 17px 32px;
 
     height: 100%;
+    transition: 0.3s ease-in-out;
 
     &:nth-child(even) {
       border-left: none;
       border-right: none;
+    }
+
+    &:hover {
+      color: var(--color-secondary-white);
+      transition: 0.3s ease-in-out;
     }
 
     &.active {

@@ -1,12 +1,5 @@
 @import "@/src/app/shortSyles.scss";
 
-.accordion-container {
-  max-width: 350px;
-  width: 100%;
-  border-right: 1px solid var(--color-border);
-  background-color: var(--color-primary-blue);
-}
-
 .accordion-item {
   border-bottom: 1px solid var(--color-border);
 
