@@ -8,6 +8,10 @@
   width: 100%;
   gap: 80px;
 
+  @include mobile {
+    gap: 190px;
+  }
+
   .about-me-description {
     @include flex(flex-start, flex-start);
     @include f-direction(column);
@@ -17,27 +21,68 @@
 
     .description {
       color: var(--color-secondary-white);
-      font-size: 18px;
+      font-size: 18px; // Ставим стандартный размер шрифта
       font-style: normal;
       font-weight: 450;
       line-height: normal;
+
+      @include mobile {
+        font-size: 14px;
+      }
+
+      @include tablet {
+        font-size: 16px;
+      }
+
+      @include macbook {
+        font-size: 18px;
+      }
+
+      @include desktop {
+        font-size: 20px;
+      }
     }
 
     .name {
       color: var(--color-secondary-white);
-      font-size: 62px;
+      font-size: 56px;
       font-style: normal;
       font-weight: 400;
       line-height: normal;
+      text-wrap: auto;
+
+      @include macbook {
+        font-size: 50px;
+      }
+
+      @include tablet {
+        font-size: 40px;
+      }
+
+      @include mobile {
+        font-size: 50px;
+      }
     }
 
     .job-title {
       color: var(--color-secondary-blue);
-      font-family: "Fira Code";
+      font-family: var(--font-main);
       font-size: 32px;
       font-style: normal;
       font-weight: 450;
       line-height: normal;
+
+      @include macbook {
+        font-size: 28px;
+      }
+
+      @include tablet {
+        font-size: 24px;
+      }
+
+      @include mobile {
+        font-size: 18px;
+      }
     }
   }
 
@@ -50,11 +95,23 @@
 
     .description {
       color: var(--color-secondary-grey);
-      font-family: "Fira Code";
+      font-family: var(--font-main);
       font-size: 16px;
       font-style: normal;
       font-weight: 450;
       line-height: normal;
+
+      @include macbook {
+        font-size: 16px;
+      }
+
+      @include tablet {
+        font-size: 15px;
+      }
+
+      @include mobile {
+        font-size: 14px;
+      }
     }
 
     .github-link {
@@ -63,6 +120,23 @@
       font-style: normal;
       font-weight: 500;
       line-height: normal;
+      text-wrap: auto;
+
+      @include desktop {
+        font-size: 16px;
+      }
+
+      @include macbook {
+        font-size: 16px;
+      }
+
+      @include tablet {
+        font-size: 15px;
+      }
+
+      @include mobile {
+        font-size: 14px;
+      }
     }
   }
 }

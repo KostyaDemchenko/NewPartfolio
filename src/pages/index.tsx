@@ -14,13 +14,15 @@ export default function Home() {
   return (
     <div className='hero'>
       <HeadComponent />
-      <section className='container'>
+      <section className='main-container'>
         <Header />
         <main className='hero-main'>
           <div className='blur-circle-one'></div>
           <div className='blur-circle-two'></div>
-          <AboutMeMain />
-          <SnakeGame />
+          <div className='container'>
+            <AboutMeMain />
+            <SnakeGame />
+          </div>
         </main>
         <Footer />
       </section>

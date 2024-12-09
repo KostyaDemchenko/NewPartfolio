@@ -9,35 +9,29 @@ const INITIAL_SNAKE_LENGTH = 5; // начальная длина змейки
 const WINNING_FOOD_COUNT = 8; // количество еды для победы
 const SEGMENT_SIZE = 20; // размер сегмента и еды в пикселях
 
-const SnakeGame: React.FC = () => {
-  const generateFood = (snake: Position[]): Position => {
-    let newFoodPosition: Position;
-    do {
-      newFoodPosition = {
-        x: Math.floor(Math.random() * BOARD_WIDTH),
-        y: Math.floor(Math.random() * BOARD_HEIGHT),
-      };
-    } while (
-      snake.some(
-        (segment) =>
-          segment.x === newFoodPosition.x && segment.y === newFoodPosition.y
-      )
-    );
-    return newFoodPosition;
-  };
+// Фиксированные начальные позиции для серверного рендеринга.
+// Пусть змейка будет по центру, а еда неподалёку.
+const FIXED_INITIAL_SNAKE: Position[] = Array.from(
+  { length: INITIAL_SNAKE_LENGTH },
+  (_, i) => ({
+    x: 10 - i,
+    y: 10,
+  })
+);
 
-  const [snake, setSnake] = useState<Position[]>(generateInitialSnake());
-  const [food, setFood] = useState<Position>(
-    generateFood(generateInitialSnake())
-  );
-  const [direction, setDirection] = useState<Position>({ x: 1, y: 0 }); // Начальное направление
+const FIXED_INITIAL_FOOD: Position = { x: 5, y: 10 };
+
+const SnakeGame: React.FC = () => {
+  const [snake, setSnake] = useState<Position[]>(FIXED_INITIAL_SNAKE);
+  const [food, setFood] = useState<Position>(FIXED_INITIAL_FOOD);
+  const [direction, setDirection] = useState<Position>({ x: 1, y: 0 });
   const [isGameOver, setIsGameOver] = useState(false);
-  const [foodEaten, setFoodEaten] = useState(0); // количество съеденной еды
-  const [gameStarted, setGameStarted] = useState(false); // отслеживаем, началась ли игра
+  const [foodEaten, setFoodEaten] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
   const gameBoardRef = useRef<HTMLDivElement>(null);
-  const [startTime, setStartTime] = useState<number | null>(null); // время начала игры
-  const [elapsedTime, setElapsedTime] = useState<number>(0); // время, затраченное на игру
-  const [directionChanged, setDirectionChanged] = useState(false); // Флаг для отслеживания смены направления
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [directionChanged, setDirectionChanged] = useState(false);
 
   function generateInitialSnake(): Position[] {
     return Array.from({ length: INITIAL_SNAKE_LENGTH }, (_, i) => ({
@@ -45,6 +39,22 @@ const SnakeGame: React.FC = () => {
       y: 10,
     }));
   }
+
+  const generateFood = (snakePositions: Position[]): Position => {
+    let newFoodPosition: Position;
+    do {
+      newFoodPosition = {
+        x: Math.floor(Math.random() * BOARD_WIDTH),
+        y: Math.floor(Math.random() * BOARD_HEIGHT),
+      };
+    } while (
+      snakePositions.some(
+        (segment) =>
+          segment.x === newFoodPosition.x && segment.y === newFoodPosition.y
+      )
+    );
+    return newFoodPosition;
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -55,21 +65,21 @@ const SnakeGame: React.FC = () => {
         if (arrowKeys.includes(key)) {
           startGame();
         }
-        return; // Не обрабатываем нажатия дальше, если игра не запущена
+        return;
       }
 
       if (isGameOver) {
         if (arrowKeys.includes(key)) {
-          resetGame(); // Перезапускаем игру при нажатии на стрелку
+          resetGame();
         }
-        return; // Не обрабатываем нажатия дальше, если игра окончена
+        return;
       }
 
       if (!directionChanged) {
         const newDirection = getNewDirection(key, direction);
         if (newDirection && isValidDirectionChange(newDirection, direction)) {
-          setDirection(newDirection); // Мгновенно изменяем направление
-          setDirectionChanged(true); // Устанавливаем флаг, чтобы не регистрировать повторные изменения за один тик
+          setDirection(newDirection);
+          setDirectionChanged(true);
         }
       }
     };
@@ -81,24 +91,28 @@ const SnakeGame: React.FC = () => {
   }, [direction, gameStarted, isGameOver, directionChanged]);
 
   useEffect(() => {
-    if (isGameOver || !gameStarted) return; // Не запускаем игру, если не начата или окончена
+    if (isGameOver || !gameStarted) return;
 
     const gameInterval = setInterval(() => {
       moveSnake();
-      setDirectionChanged(false); // Сбрасываем флаг после каждого тика
-    }, 100); // скорость змейки
+      setDirectionChanged(false);
+    }, 100);
 
     return () => clearInterval(gameInterval);
   }, [snake, direction, isGameOver, gameStarted]);
 
   const startGame = () => {
+    // Генерируем новые позиции уже на клиенте
+    const initialSnake = generateInitialSnake();
+    const initialFood = generateFood(initialSnake);
+
+    setSnake(initialSnake);
+    setFood(initialFood);
     setGameStarted(true);
     setIsGameOver(false);
     setDirection({ x: 1, y: 0 });
     setStartTime(Date.now());
     setFoodEaten(0);
-    setSnake(generateInitialSnake());
-    setFood(generateFood(generateInitialSnake()));
   };
 
   const moveSnake = () => {
@@ -115,16 +129,16 @@ const SnakeGame: React.FC = () => {
 
     newSnake.unshift(head);
 
-    // Проверка на поедание еды
     if (head.x === food.x && head.y === food.y) {
-      setFood(generateFood(newSnake)); // генерируем еду в новом месте
+      const newFood = generateFood(newSnake);
+      setFood(newFood);
       setFoodEaten(foodEaten + 1);
       if (foodEaten + 1 === WINNING_FOOD_COUNT) {
         endGame(true);
         return;
       }
     } else {
-      newSnake.pop(); // убираем хвост только если не съели еду
+      newSnake.pop();
     }
 
     setSnake(newSnake);
@@ -145,22 +159,22 @@ const SnakeGame: React.FC = () => {
   const endGame = (win = false) => {
     setIsGameOver(true);
     setGameStarted(false);
-    setDirection({ x: 1, y: 0 }); // Сбрасываем направление
+    setDirection({ x: 1, y: 0 });
     if (win && startTime) {
       setElapsedTime(Date.now() - startTime);
     }
   };
 
   const resetGame = () => {
-    setSnake(generateInitialSnake());
-    setFood(generateFood(generateInitialSnake()));
-    setDirection({ x: 1, y: 0 }); // Сбрасываем направление
+    // Возвращаемся к фиксированным позициям для предсказуемого состояния
+    setSnake(FIXED_INITIAL_SNAKE);
+    setFood(FIXED_INITIAL_FOOD);
+    setDirection({ x: 1, y: 0 });
     setGameStarted(false);
     setIsGameOver(false);
     setFoodEaten(0);
     setElapsedTime(0);
     setStartTime(null);
-    startGame(); // Начинаем игру после сброса
   };
 
   const getNewDirection = (
@@ -185,26 +199,25 @@ const SnakeGame: React.FC = () => {
     newDirection: Position,
     currentDirection: Position
   ): boolean => {
-    // Запрещаем обратное направление
-    return (
-      newDirection.x !== -currentDirection.x ||
-      newDirection.y !== -currentDirection.y
+    // Запрещаем движение в обратную сторону
+    return !(
+      (newDirection.x === -currentDirection.x && newDirection.x !== 0) ||
+      (newDirection.y === -currentDirection.y && newDirection.y !== 0)
     );
   };
 
   const getOpacity = (index: number, length: number) => {
-    return 1 - index / length; // Определяем уровень прозрачности в зависимости от позиции сегмента
+    return 1 - index / length;
   };
 
   const getBorderRadius = (index: number): string => {
-    if (index !== 0) return "0"; // Только первый сегмент может быть головой
+    if (index !== 0) return "0";
 
-    if (direction?.x === 1) return "0 50% 50% 0"; // Двигается вправо
-    if (direction?.x === -1) return "50% 0 0 50%"; // Двигается влево
-    if (direction?.y === 1) return "0 0 50% 50%"; // Двигается вниз
-    if (direction?.y === -1) return "50% 50% 0 0"; // Двигается вверх
-
-    return "0"; // по умолчанию
+    if (direction?.x === 1) return "0 50% 50% 0";
+    if (direction?.x === -1) return "50% 0 0 50%";
+    if (direction?.y === 1) return "0 0 50% 50%";
+    if (direction?.y === -1) return "50% 50% 0 0";
+    return "0";
   };
 
   return (
@@ -225,13 +238,15 @@ const SnakeGame: React.FC = () => {
             }}
           ></div>
         ))}
-        <div
-          className='food'
-          style={{
-            left: `${food.x * SEGMENT_SIZE}px`,
-            top: `${food.y * SEGMENT_SIZE}px`,
-          }}
-        ></div>
+        {food && (
+          <div
+            className='food'
+            style={{
+              left: `${food.x * SEGMENT_SIZE}px`,
+              top: `${food.y * SEGMENT_SIZE}px`,
+            }}
+          ></div>
+        )}
       </div>
       <div className='game-info'>
         <div className='controls'>

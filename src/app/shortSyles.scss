@@ -19,6 +19,34 @@
   }
 }
 
+// Миксин для мобильных устройств (до 570px)
+@mixin mobile {
+  @media screen and (max-width: 570px) {
+    @content;
+  }
+}
+
+// Миксин для планшетов (до 1200px)
+@mixin tablet {
+  @media screen and (max-width: 1200px) {
+    @content;
+  }
+}
+
+// Миксин для макбуков (1440px)
+@mixin macbook {
+  @media screen and (max-width: 1440px) {
+    @content;
+  }
+}
+
+// Миксин для десктопов (1920px и выше)
+@mixin desktop {
+  @media screen and (min-width: 1920px) {
+    @content;
+  }
+}
+
 @mixin container {
   --container-top-padding: 0;
   --container-side-padding: 15px;

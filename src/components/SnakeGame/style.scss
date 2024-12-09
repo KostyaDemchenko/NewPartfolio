@@ -20,6 +20,18 @@
 
   position: relative;
 
+  @include macbook {
+    padding: 20px;
+  }
+
+  @include tablet {
+    display: none;
+  }
+
+  @include mobile {
+    display: none;
+  }
+
   .game-board {
     position: relative;
     width: 400px;
@@ -141,6 +153,10 @@
     border-radius: 8px;
     background: rgba(1, 20, 35, 0.19);
 
+    @include macbook {
+      display: none;
+    }
+
     .controls {
       @include flex(center, flex-start);
       @include f-direction(column);
@@ -230,5 +246,18 @@
       font-weight: 450;
       line-height: normal;
     }
+  }
+}
+
+// Анимация движения
+@keyframes moveShapes {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  100% {
+    transform: translate(-50px, 30px) scale(1);
   }
 }

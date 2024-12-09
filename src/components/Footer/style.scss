@@ -6,6 +6,10 @@ footer {
   width: 100%;
   height: 50px;
 
+  @include mobile {
+    display: none;
+  }
+
   .find-me-box {
     @include flex(space-between, center);
     @include f-direction(row);
@@ -22,6 +26,11 @@ footer {
       width: fit-content;
       height: 100%;
 
+      @include mobile {
+        @include flex(space-between, center);
+        width: 100%;
+      }
+
       .description {
         padding: 0 20px;
         color: var(--color-secondary-grey);
@@ -31,7 +40,13 @@ footer {
         line-height: normal;
       }
 
-      i {
+      .links-box {
+        @include flex(center, center);
+        @include f-direction(row);
+        height: 100%;
+      }
+
+      .social-link {
         @include flex(center, center);
         color: var(--color-secondary-grey);
 
@@ -40,7 +55,7 @@ footer {
         cursor: pointer;
         transition: 0.3s ease-in-out;
 
-        &:nth-child(even) {
+        &:nth-child(odd) {
           border-right: 1px solid var(--color-border);
           border-left: 1px solid var(--color-border);
         }

@@ -81,6 +81,7 @@ a,
 span {
   color: var(--color-secondary-white);
   font-family: var(--font-main);
+  text-wrap: auto;
 }
 
 li {
@@ -110,7 +111,7 @@ span {
   color: var(--color-accent-orange);
 }
 
-.container {
+.main-container {
   @include flex(flex-start, flex-start);
   @include f-direction(column);
 
@@ -141,6 +142,18 @@ span {
   overflow: hidden; // скрывает все выходящие за границы элементы
   background-color: var(--color-primary-black); // основной цвет фона=
 
+  @include macbook {
+    padding: 35px;
+  }
+
+  @include tablet {
+    padding: 25px;
+  }
+
+  @include mobile {
+    padding: 10px;
+  }
+
   .blur-circle-one,
   .blur-circle-two {
     position: absolute;
@@ -149,6 +162,21 @@ span {
     border-radius: 50%;
     filter: blur(150px);
     animation: moveShapes 15s infinite alternate;
+
+    @include macbook {
+      width: 200px;
+      height: 200px;
+    }
+
+    @include tablet {
+      width: 150px;
+      height: 150px;
+    }
+
+    @include mobile {
+      width: 100px;
+      height: 100px;
+    }
   }
 
   // Вторая размытая форма
@@ -178,17 +206,45 @@ span {
   max-height: calc(100dvh - 194px);
   box-sizing: border-box;
   gap: 130px;
+
+  @include macbook {
+    gap: 50px;
+    padding: 20px;
+    max-height: 100%;
+  }
+
+  @include tablet {
+    gap: 30px;
+    padding: 20px;
+    max-height: 100%;
+  }
+
+  @include mobile {
+    padding: 15px;
+    max-height: 100%;
+  }
 }
 
-// Анимация движения
-@keyframes moveShapes {
-  0% {
-    transform: translate(0, 0) scale(1);
+.container {
+  @include flex(space-between, center);
+  @include f-direction(row);
+
+  width: 100%;
+  max-width: 1500px;
+  padding: 0 15px;
+
+  @include macbook {
+    max-width: 1200px;
+    padding: 0 15px;
   }
-  50% {
-    transform: translate(30px, -50px) scale(1.1);
+
+  @include tablet {
+    max-width: 900px;
+    padding: 0 5px;
   }
-  100% {
-    transform: translate(-50px, 30px) scale(1);
+
+  @include mobile {
+    max-width: 900px;
+    padding: 0;
   }
 }
