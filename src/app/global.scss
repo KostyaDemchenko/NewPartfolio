@@ -209,18 +209,15 @@ span {
 
   @include macbook {
     gap: 50px;
-    padding: 20px;
     max-height: 100%;
   }
 
   @include tablet {
     gap: 30px;
-    padding: 20px;
     max-height: 100%;
   }
 
   @include mobile {
-    padding: 15px;
     max-height: 100%;
   }
 }

@@ -17,7 +17,7 @@ export default function Experience() {
   return (
     <div className='hero'>
       <HeadComponent />
-      <section className='container'>
+      <section className='main-container'>
         <Header />
         <main className='hero-main'>
           <Anchors />
