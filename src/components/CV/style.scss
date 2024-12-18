@@ -9,6 +9,12 @@
   color: var(--color-secondary-white);
   overflow-y: auto;
 
+  @include mobile {
+    height: 100%;
+    padding: 0;
+    overflow-y: scroll;
+  }
+
   .cv-header {
     text-align: left;
     margin-bottom: 30px;

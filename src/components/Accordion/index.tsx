@@ -4,19 +4,32 @@ import "./style.scss";
 interface AccordionProps {
   title: string;
   children: React.ReactNode;
-  show?: boolean; // Новый проп для начального состояния
+  show?: boolean;
 }
 
-const Accordion = ({ title, children, show = false }: AccordionProps) => {
-  const [isOpen, setIsOpen] = useState(show);
+const Accordion = ({ title, children, show }: AccordionProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const updateAccordionState = () => {
+      if (window.innerWidth <= 570) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
+    };
+
+    updateAccordionState();
+
+    window.addEventListener("resize", updateAccordionState);
+    return () => {
+      window.removeEventListener("resize", updateAccordionState);
+    };
+  }, []);
 
   const toggleAccordion = () => {
     setIsOpen((prev) => !prev);
   };
-
-  useEffect(() => {
-    setIsOpen(show); // Обновляет состояние при изменении пропа `show`
-  }, [show]);
 
   return (
     <div className='accordion-item'>

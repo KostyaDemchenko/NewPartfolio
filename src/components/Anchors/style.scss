@@ -6,4 +6,9 @@
   height: 100%;
   border-right: 1px solid var(--color-border);
   background-color: var(--color-primary-blue);
+
+  @include mobile {
+    height: fit-content;
+    max-width: 100%;
+  }
 }

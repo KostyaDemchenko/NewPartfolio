@@ -62,9 +62,9 @@
           color: var(--color-secondary-grey);
           text-decoration: none;
           transition: 0.3s;
-          overflow: hidden; // Обрезка текста
-          white-space: nowrap; // Запрет на перенос строки
-          text-overflow: ellipsis; // Отображение многоточия
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
 
           i {
             margin-right: 10px;
