@@ -1,15 +1,12 @@
-// src/components/ContactForm.tsx
 import React, { useState } from "react";
 import { z } from "zod";
 import "./style.scss";
 
-// Схема валидации через Zod
 const formSchema = z.object({
   name: z
     .string()
     .nonempty("Поле 'name' обязательно")
     .min(2, "Минимум 2 символа"),
-  // Улучшенная валидация email:
   email: z
     .string()
     .trim()
@@ -20,7 +17,6 @@ const formSchema = z.object({
   message: z.string().min(5, "Сообщение должно содержать не менее 5 символов"),
 });
 
-// Тип на основе схемы Zod
 type FormData = z.infer<typeof formSchema>;
 
 interface ContactFormProps {
@@ -28,17 +24,17 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ onChange }: ContactFormProps) {
-  // Данные формы
   const [values, setValues] = useState<FormData>({
     name: "",
     email: "",
     message: "",
   });
-
-  // Ошибки для каждого поля
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [serverMessage, setServerMessage] = useState("");
 
-  // Обновление полей
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -47,29 +43,43 @@ export default function ContactForm({ onChange }: ContactFormProps) {
     setValues(updated);
     onChange(updated);
   };
-
   // Отправка формы
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Валидация введённых данных
       const parsedData = formSchema.parse(values);
-
-      // Если нет ошибок — очищаем состояние ошибок
       setErrors({});
-      // Логика отправки через NodeMailer или fetch на API
-      console.log("Данные прошли валидацию:", parsedData);
+      setStatus("loading");
+      setServerMessage("");
+
+      const response = await fetch("/api/send_mail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsedData),
+      });
+      const resData = await response.json();
+
+      if (response.ok) {
+        setStatus("success");
+        setServerMessage("Сообщение успешно отправлено!");
+        setValues({ name: "", email: "", message: "" });
+        onChange({ name: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+        setServerMessage(resData.msg || "Ошибка при отправке");
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Собираем ошибки в объект
         const fieldErrors: Partial<FormData> = {};
         error.issues.forEach((issue) => {
-          // issue.path[0] содержит имя поля
           const fieldName = issue.path[0] as keyof FormData;
           fieldErrors[fieldName] = issue.message;
         });
         setErrors(fieldErrors);
-        console.error("Ошибки валидации:", fieldErrors);
+      } else {
+        setStatus("error");
+        setServerMessage("Ошибка при отправке (js-ошибка валидации или сети).");
+        console.error("Ошибка при отправке:", error);
       }
     }
   };
@@ -77,7 +87,6 @@ export default function ContactForm({ onChange }: ContactFormProps) {
   return (
     <div className='contact-from-container'>
       <form onSubmit={handleSubmit}>
-        {/* ПОЛЕ name */}
         <div className='input-box'>
           <label htmlFor='name' className='input-label'>
             _name:
@@ -93,7 +102,6 @@ export default function ContactForm({ onChange }: ContactFormProps) {
           {errors.name && <span className='error-message'>{errors.name}</span>}
         </div>
 
-        {/* ПОЛЕ email */}
         <div className='input-box'>
           <label htmlFor='email' className='input-label'>
             _email:
@@ -111,7 +119,6 @@ export default function ContactForm({ onChange }: ContactFormProps) {
           )}
         </div>
 
-        {/* ПОЛЕ message */}
         <div className='input-box'>
           <label htmlFor='message' className='input-label'>
             _message:
@@ -128,8 +135,15 @@ export default function ContactForm({ onChange }: ContactFormProps) {
           )}
         </div>
 
-        <button type='submit'>submit-message</button>
+        <button type='submit' disabled={status === "loading"}>
+          {status === "loading" ? "Sending..." : "submit-message"}
+        </button>
       </form>
+
+      {status === "success" && (
+        <p className='success-message'>{serverMessage}</p>
+      )}
+      {status === "error" && <p className='error-message'>{serverMessage}</p>}
     </div>
   );
 }
