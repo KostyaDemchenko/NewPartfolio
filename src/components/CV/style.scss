@@ -9,6 +9,7 @@
   color: var(--color-secondary-white);
   overflow-y: auto;
   flex-shrink: 1;
+  position: relative;
 
   @include mobile {
     height: 100%;
