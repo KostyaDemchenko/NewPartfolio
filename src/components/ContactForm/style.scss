@@ -25,11 +25,11 @@
   }
 
   .error {
-    border: 1px solid #e99287; // Красная рамка
+    border: 1px solid var(--color-accent-red); // Красная рамка
   }
 
   .error-message {
-    color: #e99287; // Красный цвет текста ошибки
+    color: var(--color-accent-red); // Красный цвет текста ошибки
     font-size: 0.85rem;
   }
 
@@ -39,7 +39,7 @@
     width: 100%;
     gap: 10px;
     width: 100%;
-    max-width: 450px;
+    max-width: 550px;
     padding: 20px;
 
     .input-box {
