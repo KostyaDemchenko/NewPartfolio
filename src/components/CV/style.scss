@@ -2,12 +2,13 @@
 
 .cv-container {
   @include container;
-  height: calc(100% - 60px);
+  height: 100%;
 
   padding: 20px;
   background-color: var(--color-primary-blue);
   color: var(--color-secondary-white);
   overflow-y: auto;
+  flex-shrink: 1;
 
   @include mobile {
     height: 100%;

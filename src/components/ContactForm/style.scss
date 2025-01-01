@@ -14,4 +14,85 @@
     width: 100%;
     gap: 10px;
   }
+
+  .input-label {
+    color: var(--color-secondary-grey);
+
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 450;
+    line-height: normal;
+  }
+
+  .error {
+    border: 1px solid #e99287; // Красная рамка
+  }
+
+  .error-message {
+    color: #e99287; // Красный цвет текста ошибки
+    font-size: 0.85rem;
+  }
+
+  form {
+    @include flex(flex-start, flex-start);
+    @include f-direction(column);
+    width: 100%;
+    gap: 10px;
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+
+    .input-box {
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px 10px;
+        background-color: var(--color-primary-blue);
+        border: 1px solid var(--color-border);
+        color: var(--color-secondary-white);
+        font-family: var(--font-main);
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s ease;
+
+        &:hover {
+          border-color: var(--color-accent-green);
+        }
+
+        &:focus {
+          border-color: var(--color-accent-orange);
+        }
+      }
+
+      textarea {
+        width: 100% !important;
+        height: 150px;
+        resize: none;
+      }
+
+      /* Ошибка */
+      .error {
+        border-color: var(--color-accent-red) !important;
+      }
+
+      .error-message {
+        color: var(--color-accent-red);
+        font-size: 0.8rem;
+      }
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: var(--color-accent-green);
+      color: var(--color-secondary-white);
+      font-family: var(--font-main);
+      font-size: 0.95rem;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--color-accent-orange);
+      }
+    }
+  }
 }

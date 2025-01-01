@@ -42,7 +42,7 @@ header {
 
     padding: 18px 24px;
 
-    @include mobile {
+    @include tablet {
       display: none;
     }
   }
@@ -56,7 +56,8 @@ header {
     color: var(--color-secondary-grey);
     font-size: 24px;
     padding: 18px 24px;
-    @include mobile {
+
+    @include tablet {
       display: block;
     }
   }
@@ -75,7 +76,6 @@ header {
 
     z-index: 100;
 
-    // Исходное скрытое состояние
     transform: translateY(-10px);
     opacity: 0;
     pointer-events: none;

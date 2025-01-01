@@ -24,28 +24,30 @@ export default function Experience() {
       <section className='main-container'>
         <Header />
         <main className='hero-main'>
-          <Accordion title='contact' show>
-            <ul>
-              <li>
-                <a href='mailto:kostiantyn.demchenko.work@gmail.com'>
-                  <i className='ri-mail-fill'></i>
-                  kostiantyn.demchenko.work@gmail.com
-                </a>
-              </li>
-              <li>
-                <a href='tel:+380989122846'>
-                  <i className='ri-phone-fill'></i>
-                  +380 98 91 22 846
-                </a>
-              </li>
-              <li>
-                <a href='https://t.me/amateur_japanese_animation'>
-                  <i className='ri-telegram-fill'></i>
-                  telegram
-                </a>
-              </li>
-            </ul>
-          </Accordion>
+          <div className='accordion-container'>
+            <Accordion title='contact' show>
+              <ul>
+                <li>
+                  <a href='mailto:kostiantyn.demchenko.work@gmail.com'>
+                    <i className='ri-mail-fill'></i>
+                    kostiantyn.demchenko.work@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href='tel:+380989122846'>
+                    <i className='ri-phone-fill'></i>
+                    +380 98 91 22 846
+                  </a>
+                </li>
+                <li>
+                  <a href='https://t.me/amateur_japanese_animation'>
+                    <i className='ri-telegram-fill'></i>
+                    telegram
+                  </a>
+                </li>
+              </ul>
+            </Accordion>
+          </div>
           <div className='contact-container'>
             <ContactForm onChange={(newValues) => setContactData(newValues)} />
             <RealTimePreview

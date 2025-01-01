@@ -6,6 +6,17 @@
   height: 100%;
   border-right: 1px solid var(--color-border);
   background-color: var(--color-primary-blue);
+  flex-shrink: 2;
+
+  @include macbook {
+    max-width: 300px;
+    border-right: 1px solid var(--color-border);
+  }
+
+  @include tablet {
+    max-width: 200px;
+    border-right: 1px solid var(--color-border);
+  }
 
   @include mobile {
     height: fit-content;
