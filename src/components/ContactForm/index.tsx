@@ -61,12 +61,12 @@ export default function ContactForm({ onChange }: ContactFormProps) {
 
       if (response.ok) {
         setStatus("success");
-        setServerMessage("Сообщение успешно отправлено!");
+        setServerMessage("Message sent successfully!");
         setValues({ name: "", email: "", message: "" });
         onChange({ name: "", email: "", message: "" });
       } else {
         setStatus("error");
-        setServerMessage(resData.msg || "Ошибка при отправке");
+        setServerMessage(resData.msg || "Error sending");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -78,8 +78,8 @@ export default function ContactForm({ onChange }: ContactFormProps) {
         setErrors(fieldErrors);
       } else {
         setStatus("error");
-        setServerMessage("Ошибка при отправке (js-ошибка валидации или сети).");
-        console.error("Ошибка при отправке:", error);
+        setServerMessage("Error sending (js validation or network error).");
+        console.error("Error sending:", error);
       }
     }
   };
