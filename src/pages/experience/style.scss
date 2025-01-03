@@ -2,6 +2,7 @@
 
 .main-container {
   overflow: auto;
+  height: calc(100dvh - 20px);
 
   .hero-main {
     @include flex(center, flex-start);
