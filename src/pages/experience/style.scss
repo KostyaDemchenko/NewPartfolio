@@ -11,6 +11,7 @@
     @include mobile {
       @include flex(flex-start, flex-start);
       @include f-direction(column);
+      height: calc(100dvh - 90px);
     }
   }
 }
