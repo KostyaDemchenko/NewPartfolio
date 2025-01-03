@@ -19,7 +19,7 @@ const Header = () => {
         </a>
         <Nav />
       </div>
-      <a className='contact' href='./contact-me'>
+      <a className='contact' href='./contact_me'>
         _contact-me
       </a>
 

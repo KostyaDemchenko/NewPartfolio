@@ -17,10 +17,10 @@ const Nav = () => {
         _experience
       </a>
       <a
-        href='./contacts'
-        className={router.pathname === "/contacts" ? "active" : ""}
+        href='./projects'
+        className={router.pathname === "/projects" ? "active" : ""}
       >
-        _contacts
+        _projects
       </a>
     </nav>
   );

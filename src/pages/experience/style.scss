@@ -1,7 +1,7 @@
 @import "@/src/app/shortSyles.scss";
 
 .main-container {
-  overflow: auto;
+  overflow: unset;
 
   .hero-main {
     @include flex(center, flex-start);

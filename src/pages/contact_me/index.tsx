@@ -10,8 +10,7 @@ import RealTimePreview from "@/src/components/RealTimePreview";
 import "@/src/app/global.scss";
 import "./style.scss";
 
-export default function Experience() {
-  // Храним актуальные данные для передачи в RealTimePreview
+export default function ContactMe() {
   const [contactData, setContactData] = useState({
     name: "",
     email: "",
