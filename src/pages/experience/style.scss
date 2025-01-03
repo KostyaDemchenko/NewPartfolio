@@ -3,6 +3,10 @@
 .main-container {
   overflow: unset;
 
+  @include tablet {
+    overflow: auto;
+  }
+
   .hero-main {
     @include flex(center, flex-start);
     gap: 0;
