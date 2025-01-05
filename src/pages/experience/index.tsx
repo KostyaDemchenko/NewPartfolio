@@ -1,16 +1,11 @@
-// pages/experience.js
+// pages/experience.tsx
 
-import React from "react";
-
-// ваши импорты компонентов
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import Anchors from "@/src/components/Anchors";
 import CV from "@/src/components/CV";
 
-// стили
-import "@/src/app/global.scss";
 import "./style.scss";
 
 export default function Experience() {

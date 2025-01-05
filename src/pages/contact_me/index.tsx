@@ -1,4 +1,5 @@
-// pages/experience.js (или .tsx, если используете TS в папке pages)
+// pages/contact_me.tsx
+
 import React, { useState } from "react";
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
@@ -7,7 +8,6 @@ import Accordion from "@/src/components/Accordion";
 import ContactForm from "@/src/components/ContactForm";
 import RealTimePreview from "@/src/components/RealTimePreview";
 
-import "@/src/app/global.scss";
 import "./style.scss";
 
 export default function ContactMe() {

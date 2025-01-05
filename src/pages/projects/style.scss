@@ -1,0 +1,23 @@
+@import "@/src/app/shortSyles.scss";
+
+.main-container {
+  overflow: unset;
+
+  .hero-main {
+    @include flex(center, flex-start);
+    gap: 0;
+    overflow: hidden;
+
+    @include mobile {
+      @include flex(flex-start, flex-start);
+      @include f-direction(column);
+    }
+
+    // .projects-container {
+    //   @include flex(space-between, flex-start);
+    //   @include f-direction(row);
+    //   width: 100%;
+    //   height: 100%;
+    // }
+  }
+}
