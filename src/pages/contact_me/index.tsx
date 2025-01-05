@@ -8,6 +8,7 @@ import Accordion from "@/src/components/Accordion";
 import ContactForm from "@/src/components/ContactForm";
 import RealTimePreview from "@/src/components/RealTimePreview";
 
+import "@/src/app/global.scss";
 import "./style.scss";
 
 export default function ContactMe() {

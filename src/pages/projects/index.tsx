@@ -6,6 +6,7 @@ import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import Accordion from "@/src/components/Accordion";
 
+import "@/src/app/global.scss";
 import "./style.scss";
 
 export default function Projects() {

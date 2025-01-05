@@ -6,6 +6,7 @@ import Footer from "@/src/components/Footer";
 import Anchors from "@/src/components/Anchors";
 import CV from "@/src/components/CV";
 
+import "@/src/app/global.scss";
 import "./style.scss";
 
 export default function Experience() {
