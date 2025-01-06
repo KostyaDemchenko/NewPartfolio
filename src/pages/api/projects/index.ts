@@ -28,7 +28,27 @@ export default async function handler(
   }
 
   try {
-    const query = `*[_type == "project"]{
+    const { technologies } = req.query;
+
+    // Базовый GROQ-запрос с фильтрацией
+    let query = `*[_type == "project"`;
+
+    if (technologies && typeof technologies === "string") {
+      const techArray = technologies
+        .split(",")
+        .map((tech) => tech.trim())
+        .filter((tech) => tech.length > 0);
+
+      if (techArray.length > 0) {
+        // Используем OR логику для фильтрации проектов, содержащих любую из технологий
+        const techConditions = techArray
+          .map((tech) => `"${tech}" in technologies`)
+          .join(" || ");
+        query += ` && (${techConditions})`;
+      }
+    }
+
+    query += `]{
       id,
       name,
       type,
@@ -38,6 +58,10 @@ export default async function handler(
       source,
       prev_url
     }`;
+
+    // Логирование запроса для отладки
+    console.log("GROQ Query:", query);
+
     const projectsRaw = await sanityClient.fetch(query);
 
     // Временные консольные логи для отладки

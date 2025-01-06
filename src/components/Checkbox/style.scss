@@ -1,0 +1,50 @@
+@import "@/src/app/shortSyles.scss";
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  input {
+    display: none;
+  }
+
+  .checkmark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid var(--color-secondary-grey);
+    border-radius: 2px;
+    transition: background-color 0.3s, border-color 0.3s;
+
+    i {
+      color: white;
+      font-size: 16px;
+      display: none;
+    }
+  }
+
+  .label-text {
+    margin-left: 24px;
+    color: var(--color-secondary-white);
+    font-size: 14px;
+  }
+
+  &.checked {
+    .checkmark {
+      background-color: var(--color-secondary-grey);
+      border-color: var(--color-secondary-grey);
+
+      i {
+        display: block;
+      }
+    }
+  }
+
+  &:hover .checkmark {
+    border-color: var(--color-accent-green);
+  }
+}
