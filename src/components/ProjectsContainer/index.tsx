@@ -57,7 +57,6 @@ const ProjectsContainer: React.FC<ProjectsContainerProps> = ({
           link={project.source}
         />
       ))}
-      <SkeletonCard />
     </div>
   );
 };
