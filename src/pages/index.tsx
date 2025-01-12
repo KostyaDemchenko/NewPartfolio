@@ -9,7 +9,10 @@ import "@/src/app/global.scss";
 export default function Home() {
   return (
     <div className='hero'>
-      <HeadComponent />
+      <HeadComponent
+        pageTitle='Main'
+        pageDescription='Personal portfolio Kostiantyn Demchenko Main page'
+      />
       <section className='main-container'>
         <Header />
         <main className='hero-main'>

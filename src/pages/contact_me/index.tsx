@@ -20,7 +20,10 @@ export default function ContactMe() {
 
   return (
     <div className='hero'>
-      <HeadComponent />
+      <HeadComponent
+        pageTitle='Contact Me'
+        pageDescription='Personal portfolio Kostiantyn Demchenko / Contact Me'
+      />
       <section className='main-container'>
         <Header />
         <main className='hero-main'>

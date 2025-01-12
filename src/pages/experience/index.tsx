@@ -12,7 +12,10 @@ import "./style.scss";
 export default function Experience() {
   return (
     <div className='hero'>
-      <HeadComponent />
+      <HeadComponent
+        pageTitle='Experience'
+        pageDescription='Personal portfolio Kostiantyn Demchenko / Experience'
+      />
       <section className='main-container'>
         <Header />
         <main className='hero-main'>

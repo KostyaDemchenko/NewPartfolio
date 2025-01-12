@@ -118,7 +118,10 @@ export default function Projects() {
 
   return (
     <div className='hero'>
-      <HeadComponent />
+      <HeadComponent
+        pageTitle='Projects'
+        pageDescription='Personal portfolio Kostiantyn Demchenko / Projects'
+      />
       <section className='main-container'>
         <Header />
         <main className='hero-main'>
