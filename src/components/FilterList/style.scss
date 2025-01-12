@@ -1,0 +1,7 @@
+@import "@/src/app/shortSyles.scss";
+
+.filter-list {
+  @include flex(flex-start, flex-start);
+  @include f-direction(column);
+  gap: 16px;
+}

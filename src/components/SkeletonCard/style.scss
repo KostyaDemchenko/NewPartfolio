@@ -1,0 +1,121 @@
+@import "@/src/app/shortSyles.scss";
+
+/**
+ * Мы используем те же размеры и медиазапросы, что и в вашем .project-card.
+ * Для удобства назовём корневой класс .project-card.skeleton-card,
+ * чтобы стили 1:1 совпадали с карточкой, и добавить нужные классы для Skeleton.
+ */
+.project-card.skeleton-card {
+  // ----- ОСНОВНЫЕ СТИЛИ КАРТОЧКИ -----
+  @include flex(center, flex-start);
+  @include f-direction(column);
+  gap: 10px;
+  height: 350px;
+  width: calc(33.333% - 20px);
+
+  @include macbook {
+    width: calc(50% - 20px);
+    height: 350px;
+  }
+
+  @include max-w-media(1000px) {
+    width: 100%;
+  }
+
+  // ---- Заголовок карточки (имитация .project-name) ----
+  .skeleton-header {
+    width: 100%;
+
+    .sk-project-name {
+      /* Имитация заголовка (h3.project-name) */
+      width: 70%;
+      height: 20px;
+      margin-bottom: 0.5rem;
+      /* Фон и анимацию MUI Skeleton мы перекрываем через !important */
+      background-color: var(--color-primary-blue) !important;
+      border-radius: 4px;
+    }
+  }
+
+  // ---- Контент карточки, аналог .project-card-content ----
+  .project-card-content {
+    @include flex(flex-start, flex-start);
+    @include f-direction(column);
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-card);
+    border-radius: 15px;
+
+    // ---- Изображение ----
+    .project-image {
+      width: 100%;
+      height: 150px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+
+      // Скелетон вместо img
+      .sk-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 15px 15px 0 0;
+        background-color: var(--color-primary-blue) !important;
+      }
+
+      // Скелетон вместо .open-project-button
+      .sk-open-project-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 28px;
+        height: 28px;
+        border-radius: 4px;
+        background-color: var(--color-primary-blue) !important;
+      }
+    }
+
+    // ---- Блок project-box ----
+    .project-box {
+      @include flex(space-between, flex-start);
+      @include f-direction(column);
+      height: 100%;
+      width: 100%;
+      padding: 16px;
+      gap: 10px;
+
+      // .project-description-box
+      .project-description-box {
+        @include flex(center, flex-start);
+        @include f-direction(column);
+        width: 100%;
+        gap: 10px;
+
+        // Скелетон вместо p.project-description
+        .sk-description {
+          width: 90%;
+          height: 14px;
+          margin-bottom: 4px;
+          background-color: var(--color-primary-blue) !important;
+          border-radius: 4px;
+        }
+
+        // Скелетон вместо .project-technologies
+        .sk-technologies {
+          width: 50%;
+          height: 24px;
+          background-color: var(--color-primary-blue) !important;
+          border-radius: 4px;
+        }
+      }
+
+      // Имитация p.project-meta
+      .sk-meta {
+        width: 30%;
+        height: 14px;
+        margin-top: auto;
+        background-color: var(--color-primary-blue) !important;
+        border-radius: 4px;
+      }
+    }
+  }
+}

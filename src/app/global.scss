@@ -17,10 +17,12 @@
 
   --color-accent-orange: #fea55f;
   --color-accent-green: #43d9ad;
+  --color-accent-blue: #86e1f9;
   --color-accent-red: #e99287;
   --color-accent-purple: #c98bdf;
 
   --color-border: #01182b;
+  --color-card: #010e1a;
 }
 
 ::-webkit-scrollbar {
@@ -107,8 +109,29 @@ span {
   color: var(--color-secondary-green);
 }
 
+.grey {
+  color: var(--color-secondary-grey);
+}
+
 .orange {
   color: var(--color-accent-orange);
+}
+
+// Skeleton
+.MuiSkeleton-rounded,
+.MuiSkeleton-text,
+.MuiSkeleton-rectangular,
+.MuiSkeleton-root,
+.MuiSkeleton-circular {
+  &::after {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-secondary-green),
+      transparent
+    ) !important;
+    opacity: 0.3 !important;
+  }
 }
 
 .main-container {

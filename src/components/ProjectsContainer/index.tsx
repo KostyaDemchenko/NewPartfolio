@@ -1,12 +1,20 @@
-import React from "react";
 import { Skeleton, Box } from "@mui/material";
+import SkeletonCard from "@/src/components/SkeletonCard";
+import ProjectCard from "@/src/components/ProjectCard";
+
+import { parseDate } from "@/src/utils/functions/parseDate";
+
 import "./style.scss";
 
 interface Project {
   id: string;
   name: string;
+  type: string;
   technologies: string[];
-  // другие поля проекта
+  date: string;
+  description: string;
+  source: string;
+  prev_url: string | null;
 }
 
 interface ProjectsContainerProps {
@@ -19,84 +27,37 @@ const ProjectsContainer: React.FC<ProjectsContainerProps> = ({
   isLoading,
 }) => {
   if (isLoading) {
-    // Рендерим скелетон с использованием MUI Skeleton
     return (
       <div className='projects-container'>
-        {[...Array(6)].map((_, index) => (
-          <Box key={index} className='skeleton-card'>
-            <Skeleton
-              variant='rounded'
-              animation='wave'
-              sx={{
-                bgcolor: "var(--color-primary-blue)",
-                height: 30,
-                width: "70%",
-                marginBottom: 1,
-                borderRadius: 2,
-              }}
-            />
-            <Skeleton
-              variant='rounded'
-              animation='wave'
-              sx={{
-                bgcolor: "var(--color-primary-blue)",
-                height: 20,
-                width: "50%",
-                borderRadius: 2,
-              }}
-            />
-          </Box>
+        {[...Array(9)].map((_, index) => (
+          <SkeletonCard key={index} />
         ))}
       </div>
     );
   }
 
-  if (projects.length === 0) {
-    return (
-      <p className='no-projects'>
-        Нет проектов, соответствующих выбранным фильтрам.
-      </p>
-    );
-  }
+  const sortedProjects = [...projects].sort((a, b) => {
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+    return dateB - dateA;
+  });
 
   return (
     <div className='projects-container'>
-      {projects.map((project) => (
-        <div key={project.id} className='project-card'>
-          <h3>{project.name}</h3>
-          <div className='technologies'>
-            {project.technologies.map((tech) => (
-              <span key={tech} className='tech-tag'>
-                {tech}
-              </span>
-            ))}
-          </div>
-          {/* Добавьте другие детали проекта по необходимости */}
-        </div>
+      {sortedProjects.map((project) => (
+        <ProjectCard
+          key={project.id}
+          id={project.id}
+          name={project.name}
+          type={project.type}
+          image={project.prev_url || "/default-image.jpg"}
+          description={project.description}
+          date={project.date}
+          technologies={project.technologies}
+          link={project.source}
+        />
       ))}
-      <Box className='skeleton-card'>
-        <Skeleton
-          variant='rounded'
-          animation='wave'
-          sx={{
-            bgcolor: "var(--color-primary-blue)",
-            height: 30,
-            width: "70%",
-            marginBottom: 1,
-            borderRadius: 2,
-          }}
-        />
-        <Skeleton
-          variant='rounded'
-          animation='wave'
-          sx={{
-            bgcolor: "var(--color-primary-blue)",
-            height: 20,
-            width: "50%",
-            borderRadius: 2,
-          }}
-        />
-      </Box>
+      <SkeletonCard />
     </div>
   );
 };

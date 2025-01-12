@@ -24,6 +24,8 @@ export default function ContactMe() {
       <section className='main-container'>
         <Header />
         <main className='hero-main'>
+          <div className='blur-circle-one'></div>
+          <div className='blur-circle-two'></div>
           <div className='accordion-container'>
             <Accordion title='contact' show>
               <ul>

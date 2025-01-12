@@ -123,7 +123,7 @@ export default function Projects() {
         <Header />
         <main className='hero-main'>
           <div className='accordion-container'>
-            <Accordion title='Фильтры' show>
+            <Accordion title='filters' show>
               <FilterList
                 technologies={allTechnologies}
                 onFilterChange={handleFilterChange}

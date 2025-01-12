@@ -17,20 +17,20 @@
     height: 20px;
     background-color: transparent;
     border: 1px solid var(--color-secondary-grey);
-    border-radius: 2px;
+    border-radius: 3px;
     transition: background-color 0.3s, border-color 0.3s;
 
     i {
-      color: white;
+      color: var(--color-secondary-white);
       font-size: 16px;
       display: none;
     }
   }
 
   .label-text {
-    margin-left: 24px;
-    color: var(--color-secondary-white);
-    font-size: 14px;
+    margin-left: 10px;
+    color: var(--color-secondary-grey);
+    font-size: 16px;
   }
 
   &.checked {
@@ -41,6 +41,10 @@
       i {
         display: block;
       }
+    }
+
+    .label-text {
+      color: var(--color-secondary-white);
     }
   }
 

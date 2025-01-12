@@ -1,7 +1,6 @@
-// components/FilterList.tsx
-
-import React from "react";
 import Checkbox from "@/src/components/Checkbox";
+
+import "./style.scss";
 
 interface FilterListProps {
   technologies: string[];
