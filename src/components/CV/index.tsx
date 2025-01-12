@@ -3,332 +3,325 @@ import "./style.scss";
 const CV = () => {
   return (
     <div className='cv-container'>
-      {/* Заголовок с именем и должностью */}
+      {/* CV Header */}
       <div className='cv-header'>
-        <h1>Демченко Константин</h1>
+        <h1>Kostiantyn Demchenko</h1>
         <h2>Front-End Developer</h2>
       </div>
 
-      {/* Раздел "Обо мне" */}
+      {/* About Me */}
       <section className='about-me' id='about-me'>
-        <h3>Обо мне</h3>
+        <h3>About me</h3>
         <p>
-          Высокомотивированный Front-End разработчик с 1,5 годами опыта в
-          создании современных, адаптивных и удобных для пользователя веб-сайтов
-          и веб-приложений. Навыки в Next.js, React, TypeScript, JavaScript,
-          SCSS/CSS и HTML. Ищу роль в динамичной, активной команде.
+          Highly motivated Front-End Developer with 1.5 years of experience
+          creating modern, responsive, and user-friendly websites and web
+          applications. Skilled in Next.JS, React, TypeScript, JavaScript,
+          SCSS/CSS, and HTML. I am looking for a role in a dynamic, active team.
         </p>
       </section>
 
-      {/* Раздел "Навыки" */}
+      {/* Skills */}
       <section className='skills' id='skills'>
-        <h3>Навыки</h3>
+        <h3>About my skills</h3>
         <ul>
-          <li>Next.js</li>
+          <li>Next.JS</li>
           <li>React</li>
           <li>TypeScript</li>
           <li>SCSS, Tailwind, Bootstrap 5</li>
           <li>HTML, CSS, JavaScript</li>
+          <li>i18n</li>
           <li>jQuery</li>
           <li>SQL</li>
-          <li>Express</li>
+          <li>Gulp</li>
           <li>Git</li>
-          <li>Адаптивный дизайн</li>
-          <li>Кроссбраузерная совместимость</li>
-          <li>UI/UX дизайн</li>
+          <li>Adaptive design</li>
+          <li>Cross-browser compatibility</li>
+          <li>Developer experience design (UI/UX)</li>
         </ul>
       </section>
 
-      {/* Раздел "Опыт работы" */}
+      {/* Experience */}
       <section className='experience' id='experience'>
-        <h3>Опыт работы</h3>
+        <h3>Experience</h3>
 
-        {/* Работа 1 */}
+        {/* 1. Front End Web Developer at AdversterX */}
         <div className='job'>
-          <h4>Full Stack Developer в Tap Skins</h4>
-          <p>Июнь 2024 - Август 2024, Украина</p>
-          <p>Мой вклад в проект можно разделить на следующие этапы:</p>
+          <h4>Front End Web Developer – AdversterX</h4>
+          <p>Aug 2024 - Feb 2025, Ukraine</p>
+          <p>
+            I worked as a Frontend Web Developer, where my main responsibilities
+            included creating modern, responsive websites using the company’s
+            established tech stack. I was involved at every stage—from writing
+            clean, well-structured code to conducting thorough testing and
+            ultimately deploying each project to a live domain.
+          </p>
+          <p>
+            Within our dynamic team setting, I regularly coordinated with the
+            team lead to clarify requirements and align on objectives. After
+            completing my assigned tasks, I submitted them for both peer and QA
+            review, incorporating any feedback to ensure top-notch quality and
+            performance. Once all revisions were addressed, I finalized and
+            deployed the features to the production environment.
+          </p>
+          <p>
+            This collaborative, step-by-step workflow allowed us to consistently
+            meet project deadlines while maintaining the highest standards of
+            user experience and technical excellence.
+          </p>
+        </div>
+
+        {/* 2. Full Stack Developer at Rooh */}
+        <div className='job'>
+          <h4>Full Stack Developer – Rooh</h4>
+          <p>Jun 2024 - Sep 2025, Ukraine</p>
+          <p>
+            I worked as an outsourced Full Stack Developer, tasked with a
+            complete overhaul of the existing website. The goal was to retain
+            its core functionality while introducing new features such as a
+            feedback form, multi-language support, traffic analytics, enhanced
+            user experience, faster loading speeds, and improved SEO for broader
+            reach.
+          </p>
+          <p>
+            My responsibilities included collaborating closely with the designer
+            to research, analyze, and shape the site’s new design. I then
+            coordinated with the application developers to preserve the old
+            site’s functionality, rewriting it using modern technologies. I
+            selected Next.js, TypeScript, SCSS, NodeMailer, and Swiper.js as the
+            technology stack. Additionally, I implemented targeted SEO
+            improvements, boosting the site’s search engine ranking.
+          </p>
+          <p>
+            After thorough testing, the final step was rapidly deploying the
+            updated site to the existing domain, ensuring a seamless transition
+            for users without any disruptions.
+          </p>
+        </div>
+
+        {/* 3. Full Stack Developer at Tap Skins */}
+        <div className='job'>
+          <h4>Full Stack Developer – Tap Skins</h4>
+          <p>Jun 2024 - Aug 2024, Ukraine</p>
+          <p>
+            My contribution to the project can be divided into the following
+            stages:
+          </p>
           <ol>
             <li>
-              <strong>Выбор технологий:</strong> Ответственный за выбор наиболее
-              подходящих технологий для требований проекта (мини-приложение для
-              Telegram). Включая выбор Next.js для серверного рендеринга, SCSS
-              для эффективного стилирования, TypeScript для строгой типизации,
-              Notion как основную базу данных для динамического контента и
-              MariaDB для данных пользователей. Для бэкенда был выбран Express.
+              <strong>Technology:</strong> Next.js, SCSS, TypeScript, Express,
+              Notion, and MariaDB for a Telegram mini-app.
             </li>
             <li>
-              <strong>Разработка Frontend и Backend:</strong> Руководил
-              разработкой компонентов Frontend и Backend. На фронтенде создавал
-              адаптивный и интерактивный UI с использованием React, SCSS и
-              TypeScript. Реализовал эффективные механизмы получения данных и
-              кэширования на бэкенде для повышения производительности
-              приложения.
+              <strong>Frontend &amp; Backend Development:</strong> Developed a
+              responsive user interface using React, SCSS, and TypeScript, and
+              implemented efficient data fetching and caching on the backend.
             </li>
             <li>
-              <strong>Настройка базы данных и управление API:</strong> Настроил
-              и управлял интеграцией Notion как базы данных, устанавливая
-              необходимые API для запросов, получения и отправки данных.
-              Оптимизировал запросы для обработки больших наборов данных и
-              обеспечил быстрый и надежный доступ к данным на фронтенде.
+              <strong>Database &amp; API Management:</strong> Integrated MariaDB
+              as the primary database, established APIs for data flow between
+              the client and server, and optimized queries for large datasets.
             </li>
             <li>
-              <strong>Планирование структуры дизайна:</strong> Работал с UI/UX
-              дизайнером для достижения наилучшего дизайна, реализующего всю
-              запланированную функциональность.
+              <strong>Design Collaboration:</strong> Collaborated closely with
+              the UI/UX designer to ensure optimal implementation of the design.
             </li>
             <li>
-              <strong>Планирование проекта и управление задачами:</strong>{" "}
-              Разработал детальный план проекта для отслеживания всех задач и
-              контроля их прогресса, используя Jira.
+              <strong>Project &amp; Task Management:</strong> Created a detailed
+              project plan, tracked milestones using JIRA, and ensured progress
+              was on schedule.
             </li>
             <li>
-              <strong>Развертывание сервера и хостинг:</strong> Настроил
-              серверное окружение и управлял процессом развертывания. Проект
-              постоянно тестировался на бесплатном хостинге Vercel, после
-              успешного тестирования были внесены правки на хостинг,
-              приобретенный клиентом.
+              <strong>Server Deployment &amp; Hosting:</strong> Configured
+              environments, conducted tests on Vercel, and deployed on the
+              client’s hosting; performed final testing within Telegram.
             </li>
             <li>
-              <strong>Оптимизация производительности и безопасность:</strong>{" "}
-              Реализовал различные техники оптимизации производительности,
-              включая стратегии кэширования, для обеспечения быстрого времени
-              загрузки и плавного опыта. Также принял меры по обеспечению
-              безопасности как клиентской, так и серверной части, управляя
-              аутентификацией API и защищая конфиденциальные данные.
+              <strong>Performance &amp; Security:</strong> Implemented caching
+              strategies to enhance loading speed, managed API authentication,
+              and safeguarded sensitive data.
             </li>
           </ol>
         </div>
 
-        {/* Работа 2 */}
+        {/* 4. Front End Developer at Ai Go */}
         <div className='job'>
-          <h4>Front-End Developer в Ai Go</h4>
-          <p>Март 2024 - Май 2024, Украина</p>
-          <p>Мой вклад в проект можно разделить на следующие этапы:</p>
+          <h4>Front End Developer – Ai Go</h4>
+          <p>Mar 2024 - May 2024, Ukraine</p>
+          <p>
+            My contribution to the project can be divided into the following
+            stages:
+          </p>
           <ol>
             <li>
-              <strong>Выбор технологий:</strong> Ответственный за выбор наиболее
-              подходящих технологий для нужд проекта, включая Next.js, SCSS,
-              TypeScript и Notion для базы данных.
+              <strong>Tech Stack Adoption:</strong> When I joined, the core
+              technologies—Next.js, SCSS, TypeScript, Sanity.io (for CRM), and
+              MariaDB—were already chosen. I collaborated with the team to fully
+              understand and leverage these tools for the project’s advancement.
             </li>
             <li>
-              <strong>Улучшение дизайна:</strong> Улучшил существующий дизайн
-              для повышения пользовательского опыта с использованием Figma,
-              обеспечивая интуитивно понятный интерфейс.
+              <strong>Design Enhancement:</strong> Working closely with our
+              design team, we refined the existing design using Figma, ensuring
+              a more intuitive, user-friendly interface.
             </li>
             <li>
-              <strong>Планирование проекта:</strong> Создал детальный план
-              проекта для отслеживания задач и контроля их выполнения, включая
-              разработку основного сайта и административной панели.
+              <strong>Project Planning:</strong> Together, we created a detailed
+              plan to track tasks and manage deadlines, covering both the main
+              site and the administrative panel.
             </li>
             <li>
-              <strong>Разработка FrontEnd и BackEnd:</strong> Руководил
-              созданием и разработкой как FrontEnd, так и BackEnd частей
-              проекта. TypeScript использовался для кэширования запросов и
-              оптимизации производительности.
-            </li>
-            <li>
-              <strong>Настройка хостинга:</strong> Выбрали Vercel для базовых
-              услуг хостинга, обеспечивая доступность и производительность
-              сайтов онлайн.
+              <strong>Front-End &amp; Back-End Development:</strong> Our team
+              collectively developed front-end and back-end features, utilizing
+              TypeScript for request caching and performance optimization.
             </li>
           </ol>
         </div>
 
-        {/* Работа 3 */}
+        {/* 5. Front End Developer/Team Manager at Outside Officialy */}
         <div className='job'>
-          <h4>Front-End Developer/Team Manager в Outside Official</h4>
-          <p>Октябрь 2023 - Март 2024, Украина</p>
-          <p>Мой вклад в проект можно разделить на следующие этапы:</p>
-          <ol>
-            <li>
-              <strong>Анализ потребностей:</strong> Тщательный анализ требований
-              и ожиданий заказчика для точного определения функциональности и
-              дизайна продукта.
-            </li>
-            <li>
-              <strong>Анализ конкурентов:</strong> Изучение существующих
-              продуктов и платформ для идентификации сильных и слабых сторон
-              конкурентов и определения нашей дифференциации на рынке.
-            </li>
-            <li>
-              <strong>Создание плана работы:</strong> Создал детальный план
-              проекта с использованием Jira для отслеживания задач и их
-              выполнения. Решили разработать два сайта: основной и
-              административную панель.
-            </li>
-            <li>
-              <strong>Разработка дизайна и структуры сайта:</strong> Разработка
-              дизайна и структуры сайта с учетом выявленных потребностей для
-              обеспечения удобства использования конечными пользователями.
-            </li>
-            <li>
-              <strong>Определение используемых технологий:</strong> Для
-              реализации функциональности административной панели выбрали
-              Next.js, TypeScript и Tailwind CSS, обеспечивая мобильную
-              совместимость. Для основного сайта также использовали Next.js и
-              TypeScript, включая SCSS для стилей. Бэкенд реализован с помощью
-              MySQL и PHP.
-            </li>
-            <li>
-              <strong>Разработка FrontEnd части сайтов:</strong> Начал
-              разработку FrontEnd части административной панели с нуля,
-              обеспечивая функциональность для редактирования информации на
-              основном сайте.
-            </li>
-            <li>
-              <strong>Выбор и настройка хостинга:</strong> Выбрали и настроили
-              VPS сервер для размещения сайтов и приобрели домен{" "}
-              <a href='https://www.outside-official.com/'>
-                outside-official.com
-              </a>{" "}
-              для обеспечения доступности продукта в интернете.
-            </li>
-          </ol>
+          <h4>Front End Developer/Team Manager – Outside Officialy</h4>
+          <p>Oct 2023 - Mar 2024, Ukraine</p>
           <p>
-            Этот опыт позволил мне применить навыки в управлении проектами и
-            FrontEnd разработке, а также получить опыт в выборе технологий и
-            настройке инфраструктуры для развертывания.
+            <strong>Needs &amp; Competitor Research:</strong> Assessed client
+            requirements, user expectations, and market alternatives to guide
+            functionality and design.
           </p>
           <p>
-            В дополнение к вышеуказанным шагам, как Team Lead, я также выполнял
-            следующие обязанности:
+            <strong>Work Plan:</strong> Created a Jira roadmap for two websites:
+            a main site for the latest group info and an admin panel for content
+            editing.
           </p>
-          <ol>
-            <li>
-              <strong>Анализ выполненных задач:</strong> После завершения
-              каждого этапа проекта проводил анализ выполненных задач для оценки
-              эффективности команды.
-            </li>
-            <li>
-              <strong>Распределение новых задач:</strong> На основе анализа
-              текущей загрузки и приоритетов проекта определял новые задачи и
-              распределял их между членами команды.
-            </li>
-            <li>
-              <strong>Ревью Pull Request:</strong> Просматривал pull requests
-              для контроля качества кода и соблюдения стандартов разработки.
-            </li>
-          </ol>
           <p>
-            Эти обязанности помогли обеспечить эффективную работу команды,
-            соблюдение сроков и предоставление качественного результата проекта.
+            <strong>Design &amp; Tech:</strong> Planned user-friendly site
+            architecture and selected Next.js, TypeScript, and Tailwind CSS/SCSS
+            for the front end, with MySQL/PHP on the back end.
+          </p>
+          <p>
+            <strong>Hosting &amp; Domain:</strong> Configured a VPS server and
+            purchased outside-official.com for online availability.
+          </p>
+          <p>
+            <strong>Team Management:</strong>
+          </p>
+          <ul>
+            <li>Reviewed tasks for alignment with requirements.</li>
+            <li>Assigned tasks based on priority and expertise.</li>
+            <li>Monitored pull requests for code quality and consistency.</li>
+          </ul>
+          <p>
+            This role allowed me to refine project management, team leadership,
+            and front-end development skills, while also gaining experience in
+            technology selection and deployment.
           </p>
         </div>
 
-        {/* Работа 4 */}
+        {/* 6. Front End Developer at BonnyFlowers */}
         <div className='job'>
-          <h4>Front-End Developer в BonnyFlowers</h4>
-          <p>Февраль 2023 - Август 2023, Украина</p>
+          <h4>Front End Developer – BonnyFlowers</h4>
+          <p>Feb 2023 - Aug 2023, Ukraine</p>
           <p>
-            Мой опыт как front-end разработчика включает разработку современного
-            адаптивного дизайна, последующую верстку и адаптацию для различных
-            устройств и браузеров. Использовал следующие технологии и
-            инструменты:
+            I focused on designing and developing modern, responsive web
+            interfaces that adapt to multiple devices and browsers. My role
+            involved:
           </p>
           <ul>
             <li>
-              <strong>HTML:</strong> Создание семантически правильной разметки и
-              структуры веб-страниц, улучшение SEO.
+              <strong>HTML:</strong> Creating semantic markup to improve
+              accessibility and SEO
             </li>
             <li>
-              <strong>CSS:</strong> Применение каскадных стилей для оформления
-              веб-страниц, создание адаптивных макетов.
+              <strong>CSS:</strong> Building responsive layouts, animations, and
+              transitions to enhance user experiences
             </li>
             <li>
-              <strong>JavaScript:</strong> Разработка интерактивных элементов и
-              функциональности на клиентской стороне.
+              <strong>JavaScript:</strong> Implementing interactive features,
+              managing DOM events, and using AJAX for server communication
             </li>
             <li>
-              <strong>REST API:</strong> Взаимодействие с сервером через REST
-              запросы для получения и отправки данных.
+              <strong>REST API:</strong> Integrating with back-end services via
+              JSON data exchange
             </li>
             <li>
-              <strong>Bootstrap:</strong> Использование фреймворка для быстрой
-              разработки адаптивных интерфейсов.
+              <strong>Bootstrap:</strong> Leveraging prebuilt components and
+              grids for rapid development
             </li>
             <li>
-              <strong>jQuery:</strong> Упрощение работы с DOM, обработка событий
-              и AJAX запросы.
+              <strong>jQuery:</strong> Simplifying DOM manipulation, event
+              handling, and AJAX requests
             </li>
             <li>
-              <strong>Git:</strong> Работа в команде с использованием системы
-              контроля версий для отслеживания и управления кодом.
+              <strong>Git &amp; Jira:</strong> Collaborating with team members,
+              version-controlling code, splitting tasks into manageable chunks,
+              and tracking progress
             </li>
           </ul>
           <p>
-            Активно использовал систему контроля версий Git для совместной
-            работы и восстановления предыдущих версий. Работал с системой
-            управления проектами Jira для отслеживания целей и задач.
-          </p>
-          <p>
-            Мой опыт в front-end разработке включает дизайн и разработку
-            адаптивных и интерактивных пользовательских интерфейсов, оптимизацию
-            производительности веб-приложений и сотрудничество с другими членами
-            команды для достижения общих целей проекта.
+            Throughout the project, I emphasized performance optimization,
+            adherence to development best practices, and close collaboration
+            with the team to meet project goals.
           </p>
         </div>
 
-        {/* Работа 5 */}
+        {/* 7. Front End Developer (Freelance) */}
         <div className='job'>
-          <h4>Front-End Developer на Фрилансе</h4>
-          <p>Май 2022 - Август 2022, Украина</p>
+          <h4>Front End Developer – Freelance</h4>
+          <p>May 2022 - Aug 2022, Ukraine</p>
           <ul>
             <li>
-              Сотрудничал с командой дизайнеров, разработчиков и
-              заинтересованных сторон для создания удобных интерфейсов.
+              Collaborated with a team of designers, developers, and
+              stakeholders to create.
             </li>
             <li>
-              Разрабатывал удобные и визуально привлекательные пользовательские
-              интерфейсы с использованием HTML, CSS и JavaScript.
+              Developed convenient and visually attractive user interfaces using
+              HTML, CSS, and JavaScript.
+            </li>
+            <li>Designed reusable components using jQuery.</li>
+            <li>
+              Implemented adaptive design technologies to ensure optimal viewing
+              on all devices.
             </li>
             <li>
-              Проектировал переиспользуемые компоненты с использованием jQuery.
-            </li>
-            <li>
-              Реализовывал адаптивные технологии дизайна для оптимального
-              просмотра на всех устройствах.
-            </li>
-            <li>
-              Поддерживал качество кода и его организацию с помощью Git и
-              GitHub.
+              Maintained code quality and organization using Git and GitHub.
             </li>
           </ul>
         </div>
       </section>
 
-      {/* Раздел "Образование / Курсы" */}
+      {/* Education / Courses */}
       <section className='education' id='education'>
-        <h3>Образование / Курсы</h3>
+        <h3>Education / Courses</h3>
         <div className='education-item'>
-          <h4>Харьковский национальный университет радиоэлектроники</h4>
-          <p>Компьютерные науки, Магистр</p>
-          <p>2024 - 2025, Харьков</p>
+          <h4>Kharkiv National University of Radio Electronics</h4>
+          <p>Computer Science, Higher education, Master's degree</p>
+          <p>2024 - 2025, Kharkiv</p>
         </div>
+
         <div className='education-item'>
-          <h4>Харьковский национальный университет радиоэлектроники</h4>
-          <p>Компьютерные науки, Бакалавр</p>
-          <p>2020 - 2024, Харьков</p>
+          <h4>Kharkiv National University of Radio Electronics</h4>
+          <p>Computer Science, Higher education, Bachelor</p>
+          <p>2020 - 2024, Kharkiv</p>
         </div>
+
         <div className='education-item'>
-          <h4>Hillel</h4>
-          <p>Курс Front-end Pro</p>
+          <h4>Hilell</h4>
+          <p>Front end Pro course</p>
           <p>
             <a href='https://certificate.ithillel.ua/view/77686741'>
-              Сертификат
+              https://certificate.ithillel.ua/view/77686741
             </a>
           </p>
-          <p>2022 - 2023, Харьков</p>
+          <p>2022 - 2023, Kharkiv</p>
         </div>
+
         <div className='education-item'>
           <h4>Lemon-School Studio</h4>
-          <p>Курс Front-End (HTML/CSS + JS)</p>
-          <p>2022 - 2022, Харьков</p>
+          <p>Front-End course (HTML/CSS + JS)</p>
+          <p>2022 - 2022, Kharkiv</p>
         </div>
+
         <div className='education-item'>
-          <h4>Харьковская общеобразовательная школа I-III ступеней №151</h4>
-          <p>Среднее образование</p>
-          <p>2009 - 2020, Харьков</p>
+          <h4>Kharkiv comprehensive school of grades I-III #151</h4>
+          <p>Secondary education</p>
+          <p>2009 - 2020, Kharkiv</p>
         </div>
       </section>
     </div>

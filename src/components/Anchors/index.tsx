@@ -47,6 +47,12 @@ const Anchors = () => {
             </a>
           </li>
           <li>
+            <a href='https://www.linkedin.com/in/kostiantyn-demchenko-14874224a/'>
+              <i className='ri-linkedin-box-fill'></i>
+              linkedIn
+            </a>
+          </li>
+          <li>
             <a href='https://t.me/amateur_japanese_animation'>
               <i className='ri-telegram-fill'></i>
               telegram
