@@ -72,6 +72,7 @@
     &.open {
       max-height: 700px;
       padding: 0 16px 24px 16px;
+      overflow-y: scroll;
     }
 
     ul {
