@@ -1,5 +1,10 @@
 import "./style.scss";
 
+interface TechnologyItem {
+  name: string;
+  icon?: string;
+}
+
 interface ProjectCardProps {
   id: string;
   name: string;
@@ -7,8 +12,8 @@ interface ProjectCardProps {
   image: string;
   description: string;
   date: string;
-  technologies: string[];
-  link: string | null; // Обновленный тип
+  technologies: TechnologyItem[];
+  link: string | null;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -26,6 +31,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       <h3 className='project-name'>
         {name} <span className='project-type grey'>// {type}</span>
       </h3>
+
       <div className='project-card-content'>
         <div className='project-image'>
           <img src={image} alt={`${name} preview picture`} />
@@ -40,17 +46,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </a>
           )}
         </div>
+
         <div className='project-box'>
           <div className='project-description-box'>
             <p className='project-description'>{description}</p>
             <div className='project-technologies'>
-              {technologies.map((tech) => (
-                <span key={tech} className='tech-tag'>
-                  {tech}
+              {technologies?.map((techItem) => (
+                <span key={techItem?.name || ""} className='tech-tag'>
+                  {techItem?.name}
                 </span>
               ))}
             </div>
           </div>
+
           <p className='project-meta'>{date}</p>
         </div>
       </div>

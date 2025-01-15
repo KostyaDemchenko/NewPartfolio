@@ -1,4 +1,3 @@
-import { Skeleton, Box } from "@mui/material";
 import SkeletonCard from "@/src/components/SkeletonCard";
 import ProjectCard from "@/src/components/ProjectCard";
 
@@ -6,11 +5,16 @@ import { parseDate } from "@/src/utils/functions/parseDate";
 
 import "./style.scss";
 
+interface TechnologyItem {
+  name: string;
+  icon?: string;
+}
+
 interface Project {
   id: string;
   name: string;
   type: string;
-  technologies: string[];
+  technologies: TechnologyItem[];
   date: string;
   description: string;
   source: string;

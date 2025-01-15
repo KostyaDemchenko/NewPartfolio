@@ -1,13 +1,16 @@
-// pages/api/projects/index.ts
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sanityClient, urlFor } from "@/lib/sanity";
+
+type TechnologyItem = {
+  name: string;
+  icon?: string;
+};
 
 type Project = {
   id: string;
   name: string;
   type: string;
-  technologies: string[];
+  technologies: TechnologyItem[];
   date: string;
   description: string;
   source: string;
@@ -30,9 +33,13 @@ export default async function handler(
   try {
     const { technologies } = req.query;
 
-    // Базовый GROQ-запрос с фильтрацией
+    // Base GROQ query for projects
     let query = `*[_type == "project"`;
 
+    /**
+     * If ?technologies=React,SCSS we want to show all projects that
+     * contain ANY of those technology names in technologies[].name
+     */
     if (technologies && typeof technologies === "string") {
       const techArray = technologies
         .split(",")
@@ -40,44 +47,44 @@ export default async function handler(
         .filter((tech) => tech.length > 0);
 
       if (techArray.length > 0) {
-        // Используем OR логику для фильтрации проектов, содержащих любую из технологий
+        // OR logic for each tech name: e.g. ("React" in technologies[].name) || ("SCSS" in technologies[].name)
         const techConditions = techArray
-          .map((tech) => `"${tech}" in technologies`)
+          .map((tech) => `"${tech}" in technologies[].name`)
           .join(" || ");
         query += ` && (${techConditions})`;
       }
     }
 
+    // Return all fields, including the array of objects for `technologies`
     query += `]{
       id,
       name,
       type,
-      technologies,
+      technologies[]{
+        name,
+        icon
+      },
       date,
       description,
       source,
       prev_url
     }`;
 
-    // Логирование запроса для отладки
-    console.log("GROQ Query:", query);
-
+    // Fetch data from Sanity
     const projectsRaw = await sanityClient.fetch(query);
-
-    // Временные консольные логи для отладки
     console.log("Fetched Projects:", projectsRaw);
 
     const projects: Project[] = projectsRaw.map((project: any) => ({
       ...project,
+      // Convert prev_url from image to actual URL string if present
       prev_url: project.prev_url ? urlFor(project.prev_url).url() : null,
     }));
 
-    // Временные консольные логи для отладки
     console.log("Processed Projects:", projects);
 
-    res.status(200).json({ projects });
+    return res.status(200).json({ projects });
   } catch (error) {
     console.error("Error fetching projects:", error);
-    res.status(500).json({ error: "Failed to fetch projects" });
+    return res.status(500).json({ error: "Failed to fetch projects" });
   }
 }

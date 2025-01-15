@@ -3,8 +3,13 @@ import SkeletonCheckbox from "@/src/components/SkeletonCheckbox";
 
 import "./style.scss";
 
+interface TechnologyItem {
+  name: string;
+  icon?: string;
+}
+
 interface FilterListProps {
-  technologies: string[];
+  technologies: TechnologyItem[];
   selectedFilters: string[];
   onFilterChange: (selectedFilters: string[]) => void;
   isLoading?: boolean;
@@ -16,18 +21,16 @@ const FilterList: React.FC<FilterListProps> = ({
   onFilterChange,
   isLoading = false,
 }) => {
-  const handleCheckboxChange = (tech: string) => {
-    let updatedFilters: string[];
-    if (selectedFilters.includes(tech)) {
-      updatedFilters = selectedFilters.filter((item) => item !== tech);
-    } else {
-      updatedFilters = [...selectedFilters, tech];
-    }
+  const handleCheckboxChange = (techName: string) => {
+    const updatedFilters = selectedFilters.includes(techName)
+      ? selectedFilters.filter((item) => item !== techName)
+      : [...selectedFilters, techName];
     onFilterChange(updatedFilters);
   };
 
-  // If loading => show 6 skeleton checkboxes
+  // Если `isLoading`, рендерим скелетоны
   if (isLoading) {
+    console.log("Rendering skeleton checkboxes");
     return (
       <div className='filter-list'>
         {[...Array(6)].map((_, index) => (
@@ -37,14 +40,16 @@ const FilterList: React.FC<FilterListProps> = ({
     );
   }
 
+  // Рендерим реальный список фильтров
   return (
     <div className='filter-list'>
       {technologies.map((tech) => (
         <Checkbox
-          key={tech}
-          label={tech}
-          isChecked={selectedFilters.includes(tech)}
-          onChange={() => handleCheckboxChange(tech)}
+          key={tech.name}
+          label={tech.name}
+          icon={tech.icon || ""}
+          isChecked={selectedFilters.includes(tech.name)}
+          onChange={() => handleCheckboxChange(tech.name)}
         />
       ))}
     </div>

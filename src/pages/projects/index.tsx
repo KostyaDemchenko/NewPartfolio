@@ -10,11 +10,16 @@ import "@/src/app/global.scss";
 import "./style.scss";
 import { useRouter } from "next/router";
 
+interface TechnologyItem {
+  name: string;
+  icon?: string;
+}
+
 interface Project {
   id: string;
   name: string;
   type: string;
-  technologies: string[];
+  technologies: TechnologyItem[];
   date: string;
   description: string;
   source: string;
@@ -22,7 +27,7 @@ interface Project {
 }
 
 export default function Projects() {
-  const [allTechnologies, setAllTechnologies] = useState<string[]>([]);
+  const [allTechnologies, setAllTechnologies] = useState<TechnologyItem[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -31,14 +36,20 @@ export default function Projects() {
   const router = useRouter();
   const { query } = router;
 
-  // 1. Получение полного списка технологий при загрузке страницы
+  // 1. Fetch the list of technologies with { name, icon }
   useEffect(() => {
     const fetchTechnologies = async () => {
       try {
         const response = await fetch("/api/technologies");
         const data = await response.json();
+
         if (response.ok) {
-          setAllTechnologies(data.technologies || []);
+          // Проверяем, чтобы данные пришли в правильном формате
+          if (Array.isArray(data.technologies)) {
+            setAllTechnologies(data.technologies); // Уже массив { name, icon }
+          } else {
+            setError("Некорректный формат данных с API.");
+          }
         } else {
           console.error("API Error:", data.error);
           setError(data.error);
@@ -52,7 +63,7 @@ export default function Projects() {
     fetchTechnologies();
   }, []);
 
-  // 2. Инициализация выбранных фильтров из URL
+  // 2. Initialize selected filters from URL (?technologies=React,SCSS, etc.)
   useEffect(() => {
     const initialFilters = query.technologies
       ? Array.isArray(query.technologies)
@@ -62,21 +73,18 @@ export default function Projects() {
     setSelectedFilters(initialFilters);
   }, [query.technologies]);
 
-  // 3. Получение отфильтрованных проектов при изменении фильтров
+  // 3. Fetch filtered projects whenever selectedFilters changes
   useEffect(() => {
     const fetchProjects = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        // Формируем URL с параметрами фильтрации
         const params = new URLSearchParams();
         if (selectedFilters.length > 0) {
           params.append("technologies", selectedFilters.join(","));
         }
 
         const fetchUrl = `/api/projects?${params.toString()}`;
-
-        console.log("Fetching Projects with URL:", fetchUrl);
 
         const response = await fetch(fetchUrl);
         const data = await response.json();
@@ -87,11 +95,10 @@ export default function Projects() {
           console.error("API Error:", data.error);
           setError(data.error);
         }
-
-        setIsLoading(false);
       } catch (error) {
         console.error("Ошибка при загрузке проектов:", error);
         setError("Произошла ошибка при загрузке проектов.");
+      } finally {
         setIsLoading(false);
       }
     };
@@ -99,17 +106,17 @@ export default function Projects() {
     fetchProjects();
   }, [selectedFilters]);
 
-  // 4. Обработчик изменения фильтров
+  // 4. Handler for when filters change
   const handleFilterChange = (filters: string[]) => {
     setSelectedFilters(filters);
 
-    // Обновляем URL без перезагрузки страницы, используя одну строку технологий, разделённую запятыми
-    const query = filters.length > 0 ? { technologies: filters.join(",") } : {};
+    const nextQuery =
+      filters.length > 0 ? { technologies: filters.join(",") } : {};
 
     router.push(
       {
         pathname: "/projects",
-        query: query,
+        query: nextQuery,
       },
       undefined,
       { shallow: true }
@@ -128,9 +135,10 @@ export default function Projects() {
           <div className='accordion-container'>
             <Accordion title='filters' show>
               <FilterList
-                technologies={allTechnologies}
+                technologies={allTechnologies} // TechnologyItem[]
                 onFilterChange={handleFilterChange}
                 selectedFilters={selectedFilters}
+                isLoading={isLoading}
               />
             </Accordion>
           </div>
