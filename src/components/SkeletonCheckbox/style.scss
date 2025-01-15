@@ -1,0 +1,22 @@
+@import "@/src/app/shortSyles.scss";
+
+.custom-checkbox.skeleton-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: default;
+
+  .sk-checkmark {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    background-color: var(--color-primary-blue) !important;
+    margin-right: 10px;
+  }
+
+  .sk-label {
+    width: 100px;
+    height: 16px;
+    background-color: var(--color-primary-blue) !important;
+    border-radius: 4px;
+  }
+}

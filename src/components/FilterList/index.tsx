@@ -1,17 +1,20 @@
 import Checkbox from "@/src/components/Checkbox";
+import SkeletonCheckbox from "@/src/components/SkeletonCheckbox";
 
 import "./style.scss";
 
 interface FilterListProps {
   technologies: string[];
-  onFilterChange: (selectedFilters: string[]) => void;
   selectedFilters: string[];
+  onFilterChange: (selectedFilters: string[]) => void;
+  isLoading?: boolean;
 }
 
 const FilterList: React.FC<FilterListProps> = ({
   technologies,
-  onFilterChange,
   selectedFilters,
+  onFilterChange,
+  isLoading = false,
 }) => {
   const handleCheckboxChange = (tech: string) => {
     let updatedFilters: string[];
@@ -22,6 +25,17 @@ const FilterList: React.FC<FilterListProps> = ({
     }
     onFilterChange(updatedFilters);
   };
+
+  // If loading => show 6 skeleton checkboxes
+  if (isLoading) {
+    return (
+      <div className='filter-list'>
+        {[...Array(6)].map((_, index) => (
+          <SkeletonCheckbox key={index} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className='filter-list'>

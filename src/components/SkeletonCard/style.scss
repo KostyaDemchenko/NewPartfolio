@@ -1,12 +1,6 @@
 @import "@/src/app/shortSyles.scss";
 
-/**
- * Мы используем те же размеры и медиазапросы, что и в вашем .project-card.
- * Для удобства назовём корневой класс .project-card.skeleton-card,
- * чтобы стили 1:1 совпадали с карточкой, и добавить нужные классы для Skeleton.
- */
 .project-card.skeleton-card {
-  // ----- ОСНОВНЫЕ СТИЛИ КАРТОЧКИ -----
   @include flex(center, flex-start);
   @include f-direction(column);
   gap: 10px;
@@ -22,7 +16,6 @@
     width: 100%;
   }
 
-  // ---- Заголовок карточки (имитация .project-name) ----
   .skeleton-header {
     width: 100%;
 
@@ -31,7 +24,6 @@
       width: 70%;
       height: 20px;
       margin-bottom: 0.5rem;
-      /* Фон и анимацию MUI Skeleton мы перекрываем через !important */
       background-color: var(--color-primary-blue) !important;
       border-radius: 4px;
     }
