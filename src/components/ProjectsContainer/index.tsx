@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import SkeletonCard from "@/src/components/SkeletonCard";
 import ProjectCard from "@/src/components/ProjectCard";
 
@@ -30,6 +31,28 @@ const ProjectsContainer: React.FC<ProjectsContainerProps> = ({
   projects,
   isLoading,
 }) => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const projectsPerPage = 9;
+
+  // Calculate total pages
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
+
+  // Get current projects for the page
+  const sortedProjects = [...projects].sort((a, b) => {
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+    return dateB - dateA;
+  });
+
+  const currentProjects = sortedProjects.slice(
+    (currentPage - 1) * projectsPerPage,
+    currentPage * projectsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   if (isLoading) {
     return (
       <div className='projects-container'>
@@ -40,15 +63,9 @@ const ProjectsContainer: React.FC<ProjectsContainerProps> = ({
     );
   }
 
-  const sortedProjects = [...projects].sort((a, b) => {
-    const dateA = parseDate(a.date);
-    const dateB = parseDate(b.date);
-    return dateB - dateA;
-  });
-
   return (
     <div className='projects-container'>
-      {sortedProjects.map((project) => (
+      {currentProjects.map((project) => (
         <ProjectCard
           key={project.id}
           id={project.id}
@@ -61,6 +78,25 @@ const ProjectsContainer: React.FC<ProjectsContainerProps> = ({
           link={project.source}
         />
       ))}
+      {/* Пагинация */}
+      {totalPages > 1 && (
+        <div className='pagination'>
+          {[...Array(totalPages)].map((_, index) => {
+            const page = index + 1;
+            return (
+              <button
+                key={page}
+                className={`pagination-button ${
+                  page === currentPage ? "active" : ""
+                }`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

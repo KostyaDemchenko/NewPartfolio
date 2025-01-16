@@ -47,4 +47,16 @@ nav {
       border-bottom: 3px solid var(--color-accent-orange);
     }
   }
+
+  .tablet {
+    display: none;
+
+    @include tablet {
+      display: block;
+    }
+
+    @include mobile {
+      display: block;
+    }
+  }
 }

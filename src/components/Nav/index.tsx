@@ -22,6 +22,14 @@ const Nav = () => {
       >
         _projects
       </a>
+      <a
+        href='./contact_me'
+        className={`tablet ${
+          router.pathname === "/contact_me" ? "active" : ""
+        }`}
+      >
+        _contact-me
+      </a>
     </nav>
   );
 };

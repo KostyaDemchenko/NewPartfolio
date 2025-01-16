@@ -70,9 +70,21 @@
     padding: 0 16px;
 
     &.open {
-      max-height: 900px;
       padding: 0 16px 24px 16px;
-      overflow-y: scroll;
+      overflow-y: auto;
+      max-height: 900px;
+
+      @include macbook {
+        max-height: 900px;
+      }
+
+      @include tablet {
+        max-height: 900px;
+      }
+
+      @include mobile {
+        max-height: 400px;
+      }
     }
 
     ul {
