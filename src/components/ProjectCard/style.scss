@@ -4,12 +4,11 @@
   @include flex(center, flex-start);
   @include f-direction(column);
   gap: 10px;
-  height: 350px;
+  height: 360px;
   width: calc(33.333% - 20px);
 
   @include macbook {
     width: calc(50% - 20px);
-    height: 350px;
   }
 
   @include max-w-media(1000px) {
@@ -130,8 +129,22 @@
     }
 
     .project-meta {
-      font-size: 0.9rem;
-      color: var(--color-secondary-grey);
+      @include flex(space-between, center);
+      @include f-direction(row);
+      width: 100%;
+
+      .project-date {
+        font-size: 0.9rem;
+        color: var(--color-secondary-grey);
+      }
+
+      .details-button {
+        background-color: var(--color-secondary-grey);
+        color: var(--color-secondary-white);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
     }
   }
 }

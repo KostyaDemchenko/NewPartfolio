@@ -28,9 +28,7 @@ const FilterList: React.FC<FilterListProps> = ({
     onFilterChange(updatedFilters);
   };
 
-  // Если `isLoading`, рендерим скелетоны
   if (isLoading) {
-    console.log("Rendering skeleton checkboxes");
     return (
       <div className='filter-list'>
         {[...Array(6)].map((_, index) => (
@@ -40,7 +38,6 @@ const FilterList: React.FC<FilterListProps> = ({
     );
   }
 
-  // Рендерим реальный список фильтров
   return (
     <div className='filter-list'>
       {technologies.map((tech) => (
