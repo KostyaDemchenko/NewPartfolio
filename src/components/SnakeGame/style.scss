@@ -32,6 +32,10 @@
     display: none;
   }
 
+  @include max-w-height(870px) {
+    display: none;
+  }
+
   .game-board {
     position: relative;
     width: 400px;
@@ -40,6 +44,7 @@
     border: 2px solid var(--color-border);
     display: flex;
     flex-wrap: wrap;
+    flex-shrink: 0;
 
     border-radius: 8px;
     background: rgba(1, 22, 39, 0.84);
@@ -148,6 +153,7 @@
     @include f-direction(column);
 
     gap: 20px;
+    flex-shrink: 0;
 
     padding: 13px;
     border-radius: 8px;

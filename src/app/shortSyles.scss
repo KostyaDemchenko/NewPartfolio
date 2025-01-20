@@ -47,6 +47,12 @@
   }
 }
 
+@mixin max-w-height($breakpoint) {
+  @media screen and (max-height: $breakpoint) {
+    @content;
+  }
+}
+
 @mixin container {
   --container-top-padding: 0;
   --container-side-padding: 15px;
