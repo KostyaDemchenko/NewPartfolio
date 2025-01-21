@@ -1,4 +1,4 @@
-// pages/experience.tsx
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
@@ -24,6 +24,7 @@ export default function Experience() {
         </main>
         <Footer />
       </section>
+      <SpeedInsights />
     </div>
   );
 }

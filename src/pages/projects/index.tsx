@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
@@ -150,6 +152,7 @@ export default function Projects() {
         </main>
         <Footer />
       </section>
+      <SpeedInsights />
     </div>
   );
 }
