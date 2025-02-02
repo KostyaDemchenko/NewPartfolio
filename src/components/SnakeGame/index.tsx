@@ -102,7 +102,6 @@ const SnakeGame: React.FC = () => {
   }, [snake, direction, isGameOver, gameStarted]);
 
   const startGame = () => {
-    // Генерируем новые позиции уже на клиенте
     const initialSnake = generateInitialSnake();
     const initialFood = generateFood(initialSnake);
 
@@ -159,14 +158,13 @@ const SnakeGame: React.FC = () => {
   const endGame = (win = false) => {
     setIsGameOver(true);
     setGameStarted(false);
-    setDirection({ x: 1, y: 0 });
+    // Убираем setDirection({ x: 1, y: 0 }), чтобы голова не поворачивалась на восток после смерти
     if (win && startTime) {
       setElapsedTime(Date.now() - startTime);
     }
   };
 
   const resetGame = () => {
-    // Возвращаемся к фиксированным позициям для предсказуемого состояния
     setSnake(FIXED_INITIAL_SNAKE);
     setFood(FIXED_INITIAL_FOOD);
     setDirection({ x: 1, y: 0 });
