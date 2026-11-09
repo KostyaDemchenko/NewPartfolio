@@ -1,101 +1,77 @@
-import React, { useState } from "react";
-import SkeletonCard from "@/src/components/SkeletonCard";
+import React, { useRef, useState } from "react";
 import ProjectCard from "@/src/components/ProjectCard";
-
-import { parseDate } from "@/src/utils/functions/parseDate";
+import type { Project } from "@/src/types/project";
 
 import "./style.scss";
 
-interface TechnologyItem {
-  name: string;
-  icon?: string;
-}
-
-interface Project {
-  id: string;
-  name: string;
-  type: string;
-  technologies: TechnologyItem[];
-  date: string;
-  description: string;
-  source: string;
-  prev_url: string | null;
-}
-
 interface ProjectsContainerProps {
   projects: Project[];
-  isLoading: boolean;
+  highlightedTech?: string[];
+  onClearFilters?: () => void;
 }
+
+const PROJECTS_PER_PAGE = 9;
 
 const ProjectsContainer: React.FC<ProjectsContainerProps> = ({
   projects,
-  isLoading,
+  highlightedTech = [],
+  onClearFilters,
 }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const projectsPerPage = 9;
+  // The parent remounts this component when filters change, so the page resets to 1.
+  const [currentPage, setCurrentPage] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Calculate total pages
-  const totalPages = Math.ceil(projects.length / projectsPerPage);
-
-  // Get current projects for the page
-  const sortedProjects = [...projects].sort((a, b) => {
-    const dateA = parseDate(a.date);
-    const dateB = parseDate(b.date);
-    return dateB - dateA;
-  });
-
-  const currentProjects = sortedProjects.slice(
-    (currentPage - 1) * projectsPerPage,
-    currentPage * projectsPerPage
+  const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+  const page = Math.min(currentPage, Math.max(totalPages, 1));
+  const currentProjects = projects.slice(
+    (page - 1) * PROJECTS_PER_PAGE,
+    page * PROJECTS_PER_PAGE
   );
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const goToPage = (next: number) => {
+    setCurrentPage(next);
+    containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (isLoading) {
+  if (projects.length === 0) {
     return (
-      <div className='projects-container'>
-        {[...Array(9)].map((_, index) => (
-          <SkeletonCard key={index} />
-        ))}
+      <div className='projects-container empty'>
+        <p className='no-projects'>// no projects match these filters</p>
+        {onClearFilters && (
+          <button type='button' className='no-projects-clear' onClick={onClearFilters}>
+            _clear-filters
+          </button>
+        )}
       </div>
     );
   }
 
   return (
-    <div className='projects-container'>
+    <div className='projects-container' ref={containerRef}>
       {currentProjects.map((project) => (
         <ProjectCard
           key={project.id}
-          id={project.id}
-          name={project.name}
-          type={project.type}
-          image={project.prev_url || "/default-image.jpg"}
-          description={project.description}
-          date={project.date}
-          technologies={project.technologies}
-          link={project.source}
+          project={project}
+          highlightedTech={highlightedTech}
         />
       ))}
-      {/* Пагинация */}
       {totalPages > 1 && (
-        <div className='pagination'>
-          {[...Array(totalPages)].map((_, index) => {
-            const page = index + 1;
+        <nav className='pagination' aria-label='Projects pages'>
+          {Array.from({ length: totalPages }, (_, index) => {
+            const number = index + 1;
             return (
               <button
-                key={page}
-                className={`pagination-button ${
-                  page === currentPage ? "active" : ""
-                }`}
-                onClick={() => handlePageChange(page)}
+                key={number}
+                type='button'
+                className={`pagination-button ${number === page ? "active" : ""}`}
+                aria-current={number === page ? "page" : undefined}
+                onClick={() => goToPage(number)}
               >
-                {page}
+                {number}
               </button>
             );
           })}
-        </div>
+        </nav>
       )}
     </div>
   );

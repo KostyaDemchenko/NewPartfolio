@@ -4,70 +4,108 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  gap: 15px;
+  gap: 12px;
+  position: relative;
+  min-width: 0;
 
+  // Visually hidden but still focusable, so filters work from the keyboard.
   input {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    pointer-events: none;
   }
 
   .checkmark {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     width: 20px;
     height: 20px;
     background-color: transparent;
     border: 1px solid var(--color-secondary-grey);
     border-radius: 3px;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: background-color 0.2s, border-color 0.2s;
 
     i {
-      color: var(--color-secondary-white);
+      color: var(--color-primary-blue);
       font-size: 16px;
       display: none;
     }
   }
 
+  input:focus-visible + .checkmark {
+    outline: 2px solid var(--color-accent-green);
+    outline-offset: 2px;
+  }
+
   .label-box {
-    @include flex(center, center);
+    @include flex(flex-start, center);
     @include f-direction(row);
-    gap: 5px;
+    gap: 6px;
+    flex-grow: 1;
+    min-width: 0;
   }
 
   .label-text {
     color: var(--color-secondary-grey);
-    font-size: 16px;
+    font-size: 15px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: color 0.2s;
+  }
+
+  .label-count {
+    flex-shrink: 0;
+    color: var(--color-secondary-grey);
+    font-size: 12px;
+    opacity: 0.8;
   }
 
   .icon {
     &::before {
-      font-size: 20px;
+      font-size: 18px;
       color: var(--color-secondary-grey);
+      transition: color 0.2s;
+    }
+  }
+
+  &:hover:not(.disabled) {
+    .checkmark {
+      border-color: var(--color-accent-green);
+    }
+
+    .label-text {
+      color: var(--color-secondary-white);
     }
   }
 
   &.checked {
     .checkmark {
-      background-color: var(--color-secondary-grey);
-      border-color: var(--color-secondary-grey);
+      background-color: var(--color-accent-green);
+      border-color: var(--color-accent-green);
 
       i {
         display: block;
       }
     }
 
-    .label-text {
+    .label-text,
+    .label-count {
       color: var(--color-secondary-white);
     }
 
-    .icon {
-      &::before {
-        color: var(--color-secondary-white);
-      }
+    .icon::before {
+      color: var(--color-secondary-white);
     }
   }
 
-  &:hover .checkmark {
-    border-color: var(--color-accent-green);
+  &.disabled {
+    cursor: default;
+    opacity: 0.35;
   }
 }

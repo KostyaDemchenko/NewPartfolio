@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { GetStaticProps } from "next";
+import { useRouter } from "next/router";
 
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
@@ -8,128 +9,81 @@ import Accordion from "@/src/components/Accordion";
 import FilterList from "@/src/components/FilterList";
 import ProjectsContainer from "@/src/components/ProjectsContainer";
 
-import "@/src/app/global.scss";
+import { getProjects } from "@/lib/projects";
+import type { Project } from "@/src/types/project";
+import {
+  EMPTY_FILTERS,
+  FilterState,
+  filterProjects,
+  filtersFromQuery,
+  filtersToQuery,
+  technologyOptions,
+  typeOptions,
+} from "@/src/utils/projectFilters";
+
 import "./style.scss";
-import { useRouter } from "next/router";
 
-interface TechnologyItem {
-  name: string;
-  icon?: string;
+interface ProjectsPageProps {
+  projects: Project[];
 }
 
-interface Project {
-  id: string;
-  name: string;
-  type: string;
-  technologies: TechnologyItem[];
-  date: string;
-  description: string;
-  source: string;
-  prev_url: string | null;
-}
+// Projects are rendered at build time and refreshed from the CMS at most
+// once a minute, so the page never depends on a live API call in the browser.
+export const getStaticProps: GetStaticProps<ProjectsPageProps> = async () => {
+  const projects = await getProjects();
+  return { props: { projects }, revalidate: 60 };
+};
 
-export default function Projects() {
-  const [allTechnologies, setAllTechnologies] = useState<TechnologyItem[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
+const toggle = (list: string[], value: string) =>
+  list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 
+export default function Projects({ projects }: ProjectsPageProps) {
   const router = useRouter();
-  const { query } = router;
 
-  // 1. Fetch the list of technologies with { name, icon }
+  // Filters live in the URL so a filtered view can be shared. They are read
+  // from asPath after mount: router.query stays empty on statically generated
+  // pages until Next finishes its post-hydration update, which can lag.
+  const [filters, setFilterState] = useState<FilterState>(EMPTY_FILTERS);
+
   useEffect(() => {
-    const fetchTechnologies = async () => {
-      try {
-        const response = await fetch("/api/technologies");
-        const data = await response.json();
+    const search = router.asPath.split("?")[1]?.split("#")[0] ?? "";
+    setFilterState(filtersFromQuery(Object.fromEntries(new URLSearchParams(search)), projects));
+  }, [router.asPath, projects]);
 
-        if (response.ok) {
-          // Проверяем, чтобы данные пришли в правильном формате
-          if (Array.isArray(data.technologies)) {
-            setAllTechnologies(data.technologies); // Уже массив { name, icon }
-          } else {
-            setError("Некорректный формат данных с API.");
-          }
-        } else {
-          console.error("API Error:", data.error);
-          setError(data.error);
-        }
-      } catch (error) {
-        console.error("Ошибка при загрузке технологий:", error);
-        setError("Произошла ошибка при загрузке технологий.");
-      }
-    };
+  const setFilters = useCallback(
+    (next: FilterState) => {
+      setFilterState(next);
+      router.replace(
+        { pathname: router.pathname, query: filtersToQuery(next) },
+        undefined,
+        { shallow: true, scroll: false }
+      );
+    },
+    [router]
+  );
 
-    fetchTechnologies();
-  }, []);
+  const visibleProjects = useMemo(
+    () => filterProjects(projects, filters),
+    [projects, filters]
+  );
+  const techOptions = useMemo(
+    () => technologyOptions(projects, filters),
+    [projects, filters]
+  );
+  const projectTypes = useMemo(
+    () => typeOptions(projects, filters),
+    [projects, filters]
+  );
 
-  // 2. Initialize selected filters from URL (?technologies=React,SCSS, etc.)
-  useEffect(() => {
-    const initialFilters = query.technologies
-      ? Array.isArray(query.technologies)
-        ? (query.technologies as string[])
-        : (query.technologies as string).split(",").filter((tech) => tech)
-      : [];
-    setSelectedFilters(initialFilters);
-  }, [query.technologies]);
-
-  // 3. Fetch filtered projects whenever selectedFilters changes
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const params = new URLSearchParams();
-        if (selectedFilters.length > 0) {
-          params.append("technologies", selectedFilters.join(","));
-        }
-
-        const fetchUrl = `/api/projects?${params.toString()}`;
-
-        const response = await fetch(fetchUrl);
-        const data = await response.json();
-
-        if (response.ok) {
-          setFilteredProjects(data.projects || []);
-        } else {
-          console.error("API Error:", data.error);
-          setError(data.error);
-        }
-      } catch (error) {
-        console.error("Ошибка при загрузке проектов:", error);
-        setError("Произошла ошибка при загрузке проектов.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, [selectedFilters]);
-
-  // 4. Handler for when filters change
-  const handleFilterChange = (filters: string[]) => {
-    setSelectedFilters(filters);
-
-    const nextQuery =
-      filters.length > 0 ? { technologies: filters.join(",") } : {};
-
-    router.push(
-      {
-        pathname: "/projects",
-        query: nextQuery,
-      },
-      undefined,
-      { shallow: true }
-    );
-  };
+  const hasFilters = filters.tech.length > 0 || filters.types.length > 0;
+  const clearFilters = () => setFilters(EMPTY_FILTERS);
 
   return (
     <div className='hero'>
       <HeadComponent
         pageTitle='Projects'
-        pageDescription='Personal portfolio Kostiantyn Demchenko / Projects'
+        pageDescription='Projects by Kostiantyn Demchenko, Front-End Developer: web apps, websites and Telegram mini apps built with Next.js, React, Vue and TypeScript.'
+        path='/projects'
       />
       <section className='main-container'>
         <Header />
@@ -137,22 +91,30 @@ export default function Projects() {
           <div className='accordion-container'>
             <Accordion title='filters' show>
               <FilterList
-                technologies={allTechnologies} // TechnologyItem[]
-                onFilterChange={handleFilterChange}
-                selectedFilters={selectedFilters}
-                isLoading={isLoading}
+                typeOptions={projectTypes}
+                techOptions={techOptions}
+                onToggleType={(type) =>
+                  setFilters({ ...filters, types: toggle(filters.types, type) })
+                }
+                onToggleTech={(tech) =>
+                  setFilters({ ...filters, tech: toggle(filters.tech, tech) })
+                }
+                onClear={clearFilters}
+                hasFilters={hasFilters}
+                resultCount={visibleProjects.length}
+                totalCount={projects.length}
               />
             </Accordion>
           </div>
-          {error && <p className='error-message'>{error}</p>}
           <ProjectsContainer
-            projects={filteredProjects}
-            isLoading={isLoading}
+            key={JSON.stringify(filters)}
+            projects={visibleProjects}
+            highlightedTech={filters.tech}
+            onClearFilters={hasFilters ? clearFilters : undefined}
           />
         </main>
         <Footer />
       </section>
-      <SpeedInsights />
     </div>
   );
 }

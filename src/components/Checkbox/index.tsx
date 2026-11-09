@@ -2,27 +2,45 @@ import "./style.scss";
 
 interface CheckboxProps {
   label: string;
-  icon?: string;
+  icon?: string | null;
+  count?: number;
   isChecked: boolean;
+  disabled?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({
   label,
-  icon = "",
+  icon,
+  count,
   isChecked,
+  disabled = false,
   onChange,
 }) => {
+  const className = [
+    "custom-checkbox",
+    isChecked ? "checked" : "",
+    disabled ? "disabled" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <label className={`custom-checkbox ${isChecked ? "checked" : ""}`}>
-      <input type='checkbox' checked={isChecked} onChange={onChange} />
-      <span className='checkmark'>
+    <label className={className}>
+      <input
+        type='checkbox'
+        checked={isChecked}
+        disabled={disabled}
+        onChange={onChange}
+      />
+      <span className='checkmark' aria-hidden='true'>
         <i className='ri-check-line'></i>
       </span>
-      <div className='label-box'>
-        {icon && <i className={`icon ${icon}`}></i>}
+      <span className='label-box'>
+        {icon && <i className={`icon ${icon}`} aria-hidden='true'></i>}
         <span className='label-text'>{label}</span>
-      </div>
+      </span>
+      {typeof count === "number" && <span className='label-count'>{count}</span>}
     </label>
   );
 };
