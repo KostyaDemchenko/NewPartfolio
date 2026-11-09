@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import Nav from "@/src/components/Nav";
 import Footer from "@/src/components/Footer";
 
@@ -14,16 +15,22 @@ const Header = () => {
   return (
     <header>
       <div className='left-site'>
-        <a href='./' className='autor'>
+        <Link href='/' className='autor'>
           kostiantyn-demchenko
-        </a>
+        </Link>
         <Nav />
       </div>
-      <a className='contact' href='./contact_me'>
+      <Link className='contact' href='/contact_me'>
         _contact-me
-      </a>
+      </Link>
 
-      <button className='menu-button' onClick={toggleMenu}>
+      <button
+        type='button'
+        className='menu-button'
+        onClick={toggleMenu}
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={isMenuOpen}
+      >
         {isMenuOpen ? (
           <i className='ri-close-fill'></i>
         ) : (

@@ -41,7 +41,7 @@ export class TuringType {
   }
 
   private type = () => {
-    if (this.i === this.len + 1) {
+    if (this.i >= this.len + 1) {
       this.callback?.();
       return;
     }
@@ -52,6 +52,7 @@ export class TuringType {
           this.keys[Math.floor(Math.random() * this.keys.length)]
       );
       this.timer = setTimeout(() => {
+        if (this.i > this.len) return;
         this.setText(this.text.slice(0, this.i));
         this.timer = setTimeout(
           this.type,
@@ -84,6 +85,8 @@ export class TuringType {
 
   pause() {
     if (this.timer) clearTimeout(this.timer);
+    this.timer = null;
+    this.i = this.len + 1;
   }
 
   clear(n: number = this.len) {

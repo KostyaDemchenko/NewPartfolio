@@ -1,35 +1,33 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 import "./style.scss";
 
+const LINKS = [
+  { href: "/", label: "_hello" },
+  { href: "/experience", label: "_experience" },
+  { href: "/projects", label: "_projects" },
+  { href: "/contact_me", label: "_contact-me", className: "tablet" },
+];
+
 const Nav = () => {
-  const router = useRouter();
+  const { pathname } = useRouter();
 
   return (
     <nav>
-      <a href='./' className={router.pathname === "/" ? "active" : ""}>
-        _hello
-      </a>
-      <a
-        href='./experience'
-        className={router.pathname === "/experience" ? "active" : ""}
-      >
-        _experience
-      </a>
-      <a
-        href='./projects'
-        className={router.pathname === "/projects" ? "active" : ""}
-      >
-        _projects
-      </a>
-      <a
-        href='./contact_me'
-        className={`tablet ${
-          router.pathname === "/contact_me" ? "active" : ""
-        }`}
-      >
-        _contact-me
-      </a>
+      {LINKS.map((link) => {
+        const isActive = pathname === link.href;
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={[link.className, isActive ? "active" : ""].filter(Boolean).join(" ")}
+            aria-current={isActive ? "page" : undefined}
+          >
+            {link.label}
+          </Link>
+        );
+      })}
     </nav>
   );
 };

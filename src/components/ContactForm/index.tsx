@@ -1,23 +1,10 @@
 import React, { useState } from "react";
 import { z } from "zod";
+import {
+  contactFormSchema as formSchema,
+  type ContactFormData as FormData,
+} from "@/src/utils/validation/contactForm";
 import "./style.scss";
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .nonempty("Поле 'name' обязательно")
-    .min(2, "Минимум 2 символа"),
-  email: z
-    .string()
-    .trim()
-    .regex(
-      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
-      "Невалидный email (формат должен быть что-то@домен.хх)"
-    ),
-  message: z.string().min(5, "Сообщение должно содержать не менее 5 символов"),
-});
-
-type FormData = z.infer<typeof formSchema>;
 
 interface ContactFormProps {
   onChange: (values: FormData) => void;
@@ -29,7 +16,7 @@ export default function ContactForm({ onChange }: ContactFormProps) {
     email: "",
     message: "",
   });
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -57,7 +44,7 @@ export default function ContactForm({ onChange }: ContactFormProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsedData),
       });
-      const resData = await response.json();
+      const resData = await response.json().catch(() => ({}));
 
       if (response.ok) {
         setStatus("success");
@@ -66,19 +53,19 @@ export default function ContactForm({ onChange }: ContactFormProps) {
         onChange({ name: "", email: "", message: "" });
       } else {
         setStatus("error");
-        setServerMessage(resData.msg || "Error sending");
+        setServerMessage(resData.msg || "Could not send the message. Please try again later.");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<FormData> = {};
+        const fieldErrors: Partial<Record<keyof FormData, string>> = {};
         error.issues.forEach((issue) => {
           const fieldName = issue.path[0] as keyof FormData;
-          fieldErrors[fieldName] = issue.message;
+          fieldErrors[fieldName] ??= issue.message;
         });
         setErrors(fieldErrors);
       } else {
         setStatus("error");
-        setServerMessage("Error sending (js validation or network error).");
+        setServerMessage("Could not send the message. Please try again or email me directly.");
         console.error("Error sending:", error);
       }
     }

@@ -10,8 +10,9 @@ type TuringTypeProps<T extends TextTags> = {
   speed?: number;
   accuracy?: number;
   callback?: () => void;
-  href?: string; // Пропс для ссылки
-  target?: string; // Пропс для target
+  href?: string;
+  target?: string;
+  rel?: string;
 };
 
 function TuringTypeText<T extends TextTags>({
@@ -21,8 +22,9 @@ function TuringTypeText<T extends TextTags>({
   speed = 100,
   accuracy = 0.95,
   callback,
-  href, // Для ссылок
-  target, // Для target
+  href,
+  target,
+  rel,
 }: TuringTypeProps<T>) {
   // Определяем тип элемента на основе переданного тега
   type ElementType = T extends "a"
@@ -38,18 +40,21 @@ function TuringTypeText<T extends TextTags>({
   const elementRef = useRef<ElementType | null>(null);
 
   useEffect(() => {
-    if (elementRef.current) {
-      new TuringType(elementRef.current as HTMLElement, text, {
-        interval: speed,
-        accuracy: accuracy,
-        callback: callback,
-      });
-    }
+    if (!elementRef.current) return;
+    const typer = new TuringType(elementRef.current as HTMLElement, text, {
+      interval: speed,
+      accuracy: accuracy,
+      callback: callback,
+    });
+    // Stop the timers on unmount; without this, leaving the page mid-typing
+    // kept writing into a detached node and Strict Mode typed everything twice.
+    return () => typer.pause();
   }, [text, speed, accuracy, callback]);
 
   const commonProps = {
     className,
     ref: elementRef,
+    "aria-label": text,
   };
 
   if (el === "a") {
@@ -57,6 +62,7 @@ function TuringTypeText<T extends TextTags>({
       <a
         href={href}
         target={target}
+        rel={rel}
         {...(commonProps as React.RefAttributes<HTMLAnchorElement> &
           React.AnchorHTMLAttributes<HTMLAnchorElement>)}
       ></a>
