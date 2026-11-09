@@ -1,46 +1,43 @@
 import Head from "next/head";
+import { SITE_URL } from "@/src/data/contacts";
 
 interface HeadProps {
   pageTitle: string;
   pageDescription: string;
+  /** Path of the page, e.g. "/projects"; used for canonical and og:url. */
+  path?: string;
   pageImage?: string;
-  pageUrl?: string;
 }
 
 const HeadComponent: React.FC<HeadProps> = ({
   pageTitle,
   pageDescription,
+  path = "/",
   pageImage = "/img/page_image_prev.jpg",
-  pageUrl = process.env.PORTFOLIO_URL,
 }) => {
+  const title = `${pageTitle} | Kostiantyn Demchenko, Front-End Developer`;
+  const url = `${SITE_URL}${path === "/" ? "" : path}`;
+  const image = pageImage.startsWith("http") ? pageImage : `${SITE_URL}${pageImage}`;
+
   return (
     <Head>
-      {/* Basic meta tags */}
-      <title>Kostiantyn Demchenko / {pageTitle}</title>
+      <title>{title}</title>
       <meta name='description' content={pageDescription} />
-      <link rel='canonical' href={pageUrl} />
+      <meta name='viewport' content='width=device-width, initial-scale=1' />
+      <meta name='theme-color' content='#01080e' />
+      <link rel='canonical' href={url} />
 
-      {/* Fonts (example: Fira Code, or Montserrat, etc.) */}
-      <link rel='preconnect' href='https://fonts.googleapis.com' />
-      <link
-        href='https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap'
-        rel='stylesheet'
-      />
-
-      {/* Open Graph meta tags */}
-      <meta property='og:title' content={pageTitle} />
+      <meta property='og:title' content={title} />
       <meta property='og:description' content={pageDescription} />
-      <meta property='og:image' content={pageImage} />
-      <meta property='og:url' content={pageUrl} />
+      <meta property='og:image' content={image} />
+      <meta property='og:url' content={url} />
       <meta property='og:type' content='website' />
 
-      {/* Twitter Cards meta tags */}
       <meta name='twitter:card' content='summary_large_image' />
-      <meta name='twitter:title' content={pageTitle} />
+      <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={pageDescription} />
-      <meta name='twitter:image' content={pageImage} />
+      <meta name='twitter:image' content={image} />
 
-      {/* Favicon */}
       <link rel='icon' href='/favicon.ico' />
     </Head>
   );

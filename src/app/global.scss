@@ -117,23 +117,6 @@ span {
   color: var(--color-accent-orange);
 }
 
-// Skeleton
-.MuiSkeleton-rounded,
-.MuiSkeleton-text,
-.MuiSkeleton-rectangular,
-.MuiSkeleton-root,
-.MuiSkeleton-circular {
-  &::after {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--color-secondary-green),
-      transparent
-    ) !important;
-    opacity: 0.3 !important;
-  }
-}
-
 .main-container {
   @include flex(flex-start, flex-start);
   @include f-direction(column);

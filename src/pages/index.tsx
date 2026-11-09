@@ -1,18 +1,17 @@
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import AboutMeMain from "@/src/components/AboutMeMain";
 import SnakeGame from "@/src/components/SnakeGame";
 
-import "@/src/app/global.scss";
 
 export default function Home() {
   return (
     <div className='hero'>
       <HeadComponent
         pageTitle='Main'
-        pageDescription='Personal portfolio Kostiantyn Demchenko Main page'
+        pageDescription='Kostiantyn Demchenko, Front-End Developer (Vue 3, Next.js, TypeScript). Portfolio, experience and contacts.'
+        path='/'
       />
       <section className='main-container'>
         <Header />
@@ -26,7 +25,6 @@ export default function Home() {
         </main>
         <Footer />
       </section>
-      <SpeedInsights />
     </div>
   );
 }
