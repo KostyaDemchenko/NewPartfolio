@@ -1,3 +1,4 @@
+import { CONTACTS } from "@/src/data/contacts";
 import "./style.scss";
 
 const Footer = () => {
@@ -8,25 +9,29 @@ const Footer = () => {
           <p className='description'>_find-me-in</p>
           <div className='links-box'>
             <a
-              href='https://www.linkedin.com/in/kostiantyn-demchenko-14874224a/'
+              href={CONTACTS.linkedin}
               className='social-link'
               target='_blank'
+              rel='noopener noreferrer'
+              aria-label='LinkedIn'
             >
-              <i className='ri-linkedin-fill'></i>
+              <i className='ri-linkedin-fill' aria-hidden='true'></i>
             </a>
             <a
-              href='https://t.me/amateur_japanese_animation'
+              href={CONTACTS.telegram.href}
               className='social-link'
               target='_blank'
+              rel='noopener noreferrer'
+              aria-label='Telegram'
             >
-              <i className='ri-telegram-fill'></i>
+              <i className='ri-telegram-fill' aria-hidden='true'></i>
             </a>
             <a
-              href='mailto:kostiantyn.demchenko.work@gmail.com'
+              href={`mailto:${CONTACTS.email}`}
               className='social-link'
-              target='_blank'
+              aria-label='Email'
             >
-              <i className='ri-mail-fill'></i>
+              <i className='ri-mail-fill' aria-hidden='true'></i>
             </a>
           </div>
         </div>
@@ -34,9 +39,10 @@ const Footer = () => {
           <a
             className='github-link'
             target='_blank'
-            href='https://github.com/KostyaDemchenko'
+            rel='noopener noreferrer'
+            href={CONTACTS.github}
           >
-            @KostyaDemchenko <i className='ri-github-fill'></i>
+            @KostyaDemchenko <i className='ri-github-fill' aria-hidden='true'></i>
           </a>
         </div>
       </div>

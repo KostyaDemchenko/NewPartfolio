@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import HeadComponent from "@/src/components/Head";
 import Header from "@/src/components/Header";
@@ -7,8 +6,8 @@ import Footer from "@/src/components/Footer";
 import Accordion from "@/src/components/Accordion";
 import ContactForm from "@/src/components/ContactForm";
 import RealTimePreview from "@/src/components/RealTimePreview";
+import { CONTACTS } from "@/src/data/contacts";
 
-import "@/src/app/global.scss";
 import "./style.scss";
 
 export default function ContactMe() {
@@ -22,7 +21,8 @@ export default function ContactMe() {
     <div className='hero'>
       <HeadComponent
         pageTitle='Contact Me'
-        pageDescription='Personal portfolio Kostiantyn Demchenko / Contact Me'
+        pageDescription='Contact Kostiantyn Demchenko, Front-End Developer: email, Telegram, LinkedIn or the contact form.'
+        path='/contact_me'
       />
       <section className='main-container'>
         <Header />
@@ -33,21 +33,27 @@ export default function ContactMe() {
             <Accordion title='contact' show>
               <ul>
                 <li>
-                  <a href='mailto:kostiantyn.demchenko.work@gmail.com'>
-                    <i className='ri-mail-fill'></i>
-                    kostiantyn.demchenko.work@gmail.com
+                  <a href={`mailto:${CONTACTS.email}`}>
+                    <i className='ri-mail-fill' aria-hidden='true'></i>
+                    {CONTACTS.email}
                   </a>
                 </li>
                 <li>
-                  <a href='tel:+380989122846'>
-                    <i className='ri-phone-fill'></i>
-                    +380 98 91 22 846
+                  <a href={CONTACTS.phone.href}>
+                    <i className='ri-phone-fill' aria-hidden='true'></i>
+                    {CONTACTS.phone.label}
                   </a>
                 </li>
                 <li>
-                  <a href='https://t.me/amateur_japanese_animation'>
-                    <i className='ri-telegram-fill'></i>
-                    telegram
+                  <a href={CONTACTS.telegram.href} target='_blank' rel='noopener noreferrer'>
+                    <i className='ri-telegram-fill' aria-hidden='true'></i>
+                    {CONTACTS.telegram.label}
+                  </a>
+                </li>
+                <li>
+                  <a href={CONTACTS.linkedin} target='_blank' rel='noopener noreferrer'>
+                    <i className='ri-linkedin-box-fill' aria-hidden='true'></i>
+                    linkedin
                   </a>
                 </li>
               </ul>
@@ -64,7 +70,6 @@ export default function ContactMe() {
         </main>
         <Footer />
       </section>
-      <SpeedInsights />
     </div>
   );
 }

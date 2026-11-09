@@ -1,12 +1,11 @@
 import React from "react";
-import TuringType from "@/src/components/TuringType"; // Импортируем наш новый компонент
+import TuringType from "@/src/components/TuringType";
 import "./style.scss";
 
 const AboutMeMain = () => {
   return (
     <div className='about-me-container'>
       <div className='about-me-description'>
-        {/* Используем TuringType для отображения текста с эффектом печати */}
         <TuringType
           el='p'
           className='description'
@@ -22,7 +21,7 @@ const AboutMeMain = () => {
         <TuringType
           el='p'
           className='job-title'
-          text='>Frontend developer'
+          text='> Front-End Developer · Vue · Next.js'
           speed={90}
         />
       </div>
@@ -48,6 +47,7 @@ const AboutMeMain = () => {
             text='"https://github.com/KostyaDemchenko/"'
             href='https://github.com/KostyaDemchenko/'
             target='_blank'
+            rel='noopener noreferrer'
             speed={60}
           />
         </p>

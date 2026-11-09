@@ -1,33 +1,32 @@
 import Accordion from "@/src/components/Accordion";
+import { CONTACTS, CV_PDF_PATH } from "@/src/data/contacts";
 import "./style.scss";
+
+const SECTIONS = [
+  { href: "#about-me", icon: "ri-creative-commons-by-fill", label: "Summary" },
+  { href: "#skills", icon: "ri-settings-3-line", label: "Skills" },
+  { href: "#experience", icon: "ri-chat-history-line", label: "Experience" },
+  { href: "#education", icon: "ri-file-list-3-fill", label: "Education" },
+  { href: "#languages", icon: "ri-translate-2", label: "Languages" },
+];
 
 const Anchors = () => {
   return (
     <div className='accordion-container'>
-      <Accordion title='Personal Info' show>
+      <Accordion title='personal-info' show>
         <ul>
+          {SECTIONS.map((section) => (
+            <li key={section.href}>
+              <a href={section.href}>
+                <i className={section.icon} aria-hidden='true'></i>
+                {section.label}
+              </a>
+            </li>
+          ))}
           <li>
-            <a href='#about-me'>
-              <i className='ri-creative-commons-by-fill'></i>
-              Bio
-            </a>
-          </li>
-          <li>
-            <a href='#skills'>
-              <i className='ri-settings-3-line'></i>
-              Skills
-            </a>
-          </li>
-          <li>
-            <a href='#experience'>
-              <i className='ri-chat-history-line'></i>
-              Experience
-            </a>
-          </li>
-          <li>
-            <a href='#education'>
-              <i className='ri-file-list-3-fill'></i>
-              Education / Courses
+            <a href={CV_PDF_PATH} target='_blank' rel='noopener noreferrer' download>
+              <i className='ri-file-download-line' aria-hidden='true'></i>
+              CV (PDF)
             </a>
           </li>
         </ul>
@@ -35,27 +34,27 @@ const Anchors = () => {
       <Accordion title='contact' show>
         <ul>
           <li>
-            <a href='mailto:kostiantyn.demchenko.work@gmail.com'>
-              <i className='ri-mail-fill'></i>
-              kostiantyn.demchenko.work@gmail.com
+            <a href={`mailto:${CONTACTS.email}`}>
+              <i className='ri-mail-fill' aria-hidden='true'></i>
+              {CONTACTS.email}
             </a>
           </li>
           <li>
-            <a href='tel:+380989122846'>
-              <i className='ri-phone-fill'></i>
-              +380 98 91 22 846
+            <a href={CONTACTS.phone.href}>
+              <i className='ri-phone-fill' aria-hidden='true'></i>
+              {CONTACTS.phone.label}
             </a>
           </li>
           <li>
-            <a href='https://www.linkedin.com/in/kostiantyn-demchenko-14874224a/'>
-              <i className='ri-linkedin-box-fill'></i>
-              linkedIn
+            <a href={CONTACTS.linkedin} target='_blank' rel='noopener noreferrer'>
+              <i className='ri-linkedin-box-fill' aria-hidden='true'></i>
+              linkedin
             </a>
           </li>
           <li>
-            <a href='https://t.me/amateur_japanese_animation'>
-              <i className='ri-telegram-fill'></i>
-              telegram
+            <a href={CONTACTS.telegram.href} target='_blank' rel='noopener noreferrer'>
+              <i className='ri-telegram-fill' aria-hidden='true'></i>
+              {CONTACTS.telegram.label}
             </a>
           </li>
         </ul>
