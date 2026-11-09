@@ -1,304 +1,431 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./style.scss";
 
-type Position = { x: number; y: number };
+type Point = { x: number; y: number };
+type Status = "idle" | "running" | "paused" | "over" | "won";
 
-const BOARD_WIDTH = 20; // количество колонок
-const BOARD_HEIGHT = 30; // количество строк
-const INITIAL_SNAKE_LENGTH = 5; // начальная длина змейки
-const WINNING_FOOD_COUNT = 8; // количество еды для победы
-const SEGMENT_SIZE = 20; // размер сегмента и еды в пикселях
+interface Game {
+  snake: Point[];
+  direction: Point;
+  /** Turns pressed between ticks; applied one per tick so quick combos are not lost. */
+  queue: Point[];
+  food: Point;
+  eaten: number;
+  status: Status;
+  startedAt: number;
+  pausedAt: number;
+  endedAt: number;
+  elapsed: number;
+}
 
-// Фиксированные начальные позиции для серверного рендеринга.
-// Пусть змейка будет по центру, а еда неподалёку.
-const FIXED_INITIAL_SNAKE: Position[] = Array.from(
-  { length: INITIAL_SNAKE_LENGTH },
-  (_, i) => ({
-    x: 10 - i,
-    y: 10,
-  })
-);
+const COLS = 20;
+const ROWS = 30;
+const START_LENGTH = 5;
+const FOOD_TO_WIN = 8;
+const TICK_MS = 90;
+const MAX_QUEUED_TURNS = 3;
+// Keys pressed in the last moment of a game should not instantly start a new one.
+const RESTART_COOLDOWN_MS = 350;
+const BEST_TIME_KEY = "snake-best-time-ms";
 
-const FIXED_INITIAL_FOOD: Position = { x: 5, y: 10 };
+const UP: Point = { x: 0, y: -1 };
+const DOWN: Point = { x: 0, y: 1 };
+const LEFT: Point = { x: -1, y: 0 };
+const RIGHT: Point = { x: 1, y: 0 };
+
+const DIRECTION_BY_KEY: Record<string, Point> = {
+  ArrowUp: UP,
+  ArrowDown: DOWN,
+  ArrowLeft: LEFT,
+  ArrowRight: RIGHT,
+  KeyW: UP,
+  KeyS: DOWN,
+  KeyA: LEFT,
+  KeyD: RIGHT,
+};
+
+const ARROWS: { name: string; direction: Point; icon: string }[] = [
+  { name: "up", direction: UP, icon: "ri-arrow-up-s-fill" },
+  { name: "left", direction: LEFT, icon: "ri-arrow-left-s-fill" },
+  { name: "down", direction: DOWN, icon: "ri-arrow-down-s-fill" },
+  { name: "right", direction: RIGHT, icon: "ri-arrow-right-s-fill" },
+];
+
+const same = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
+const opposite = (a: Point, b: Point) => a.x === -b.x && a.y === -b.y;
+
+// Deterministic start position so the server and client render the same board.
+const createGame = (): Game => ({
+  snake: Array.from({ length: START_LENGTH }, (_, i) => ({ x: 9 - i, y: 15 })),
+  direction: RIGHT,
+  queue: [],
+  food: { x: 14, y: 9 },
+  eaten: 0,
+  status: "idle",
+  startedAt: 0,
+  pausedAt: 0,
+  endedAt: 0,
+  elapsed: 0,
+});
+
+/** Picks a random free cell; always terminates, unlike re-rolling until free. */
+const randomFood = (snake: Point[]): Point => {
+  const taken = new Set(snake.map((p) => p.y * COLS + p.x));
+  const free: number[] = [];
+  for (let i = 0; i < COLS * ROWS; i++) if (!taken.has(i)) free.push(i);
+  const cell = free[Math.floor(Math.random() * free.length)] ?? 0;
+  return { x: cell % COLS, y: Math.floor(cell / COLS) };
+};
+
+const readBestTime = () => {
+  try {
+    const value = Number(window.localStorage.getItem(BEST_TIME_KEY));
+    return Number.isFinite(value) && value > 0 ? value : null;
+  } catch {
+    return null;
+  }
+};
+
+const saveBestTime = (ms: number) => {
+  try {
+    window.localStorage.setItem(BEST_TIME_KEY, String(Math.round(ms)));
+  } catch {
+    /* storage can be unavailable in private mode */
+  }
+};
+
+const isTypingTarget = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName));
+
+const seconds = (ms: number) => (ms / 1000).toFixed(2);
 
 const SnakeGame: React.FC = () => {
-  const [snake, setSnake] = useState<Position[]>(FIXED_INITIAL_SNAKE);
-  const [food, setFood] = useState<Position>(FIXED_INITIAL_FOOD);
-  const [direction, setDirection] = useState<Position>({ x: 1, y: 0 });
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [foodEaten, setFoodEaten] = useState(0);
-  const [gameStarted, setGameStarted] = useState(false);
-  const gameBoardRef = useRef<HTMLDivElement>(null);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [elapsedTime, setElapsedTime] = useState<number>(0);
-  const [directionChanged, setDirectionChanged] = useState(false);
+  // Game state lives in a ref so the timer and key handlers always see the
+  // latest values; React state is only used to trigger a re-render.
+  const gameRef = useRef<Game>(createGame());
+  const timerRef = useRef<number | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const [, setFrame] = useState(0);
+  const [bestTime, setBestTime] = useState<number | null>(null);
+  const [pressed, setPressed] = useState<string | null>(null);
 
-  function generateInitialSnake(): Position[] {
-    return Array.from({ length: INITIAL_SNAKE_LENGTH }, (_, i) => ({
-      x: 10 - i,
-      y: 10,
-    }));
-  }
+  const rerender = useCallback(() => setFrame((frame) => frame + 1), []);
 
-  const generateFood = (snakePositions: Position[]): Position => {
-    let newFoodPosition: Position;
-    do {
-      newFoodPosition = {
-        x: Math.floor(Math.random() * BOARD_WIDTH),
-        y: Math.floor(Math.random() * BOARD_HEIGHT),
-      };
-    } while (
-      snakePositions.some(
-        (segment) =>
-          segment.x === newFoodPosition.x && segment.y === newFoodPosition.y
-      )
-    );
-    return newFoodPosition;
-  };
+  const stopLoop = useCallback(() => {
+    if (timerRef.current !== null) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const key = event.key;
-      const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-
-      if (!gameStarted) {
-        if (arrowKeys.includes(key)) {
-          startGame();
-        }
-        return;
-      }
-
-      if (isGameOver) {
-        if (arrowKeys.includes(key)) {
-          resetGame();
-        }
-        return;
-      }
-
-      if (!directionChanged) {
-        const newDirection = getNewDirection(key, direction);
-        if (newDirection && isValidDirectionChange(newDirection, direction)) {
-          setDirection(newDirection);
-          setDirectionChanged(true);
+  const finish = useCallback(
+    (status: "over" | "won") => {
+      const game = gameRef.current;
+      stopLoop();
+      game.status = status;
+      game.endedAt = performance.now();
+      game.elapsed = game.endedAt - game.startedAt;
+      if (status === "won") {
+        const best = readBestTime();
+        if (best === null || game.elapsed < best) {
+          saveBestTime(game.elapsed);
+          setBestTime(game.elapsed);
         }
       }
-    };
+      rerender();
+    },
+    [rerender, stopLoop]
+  );
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [direction, gameStarted, isGameOver, directionChanged]);
+  const tick = useCallback(() => {
+    const game = gameRef.current;
+    if (game.status !== "running") return;
 
-  useEffect(() => {
-    if (isGameOver || !gameStarted) return;
+    const next = game.queue.shift();
+    if (next) game.direction = next;
 
-    const gameInterval = setInterval(() => {
-      moveSnake();
-      setDirectionChanged(false);
-    }, 100);
-
-    return () => clearInterval(gameInterval);
-  }, [snake, direction, isGameOver, gameStarted]);
-
-  const startGame = () => {
-    const initialSnake = generateInitialSnake();
-    const initialFood = generateFood(initialSnake);
-
-    setSnake(initialSnake);
-    setFood(initialFood);
-    setGameStarted(true);
-    setIsGameOver(false);
-    setDirection({ x: 1, y: 0 });
-    setStartTime(Date.now());
-    setFoodEaten(0);
-  };
-
-  const moveSnake = () => {
-    const newSnake = [...snake];
     const head = {
-      x: newSnake[0].x + direction.x,
-      y: newSnake[0].y + direction.y,
+      x: game.snake[0].x + game.direction.x,
+      y: game.snake[0].y + game.direction.y,
     };
+    const eats = same(head, game.food);
+    // The tail moves out of the way this tick, so stepping onto it is allowed.
+    const body = eats ? game.snake : game.snake.slice(0, -1);
+    const hitsWall = head.x < 0 || head.y < 0 || head.x >= COLS || head.y >= ROWS;
 
-    if (checkCollision(head)) {
-      endGame();
+    if (hitsWall || body.some((part) => same(part, head))) {
+      finish("over");
       return;
     }
 
-    newSnake.unshift(head);
-
-    if (head.x === food.x && head.y === food.y) {
-      const newFood = generateFood(newSnake);
-      setFood(newFood);
-      setFoodEaten(foodEaten + 1);
-      if (foodEaten + 1 === WINNING_FOOD_COUNT) {
-        endGame(true);
+    game.snake = [head, ...body];
+    if (eats) {
+      game.eaten += 1;
+      if (game.eaten >= FOOD_TO_WIN) {
+        finish("won");
         return;
       }
-    } else {
-      newSnake.pop();
+      game.food = randomFood(game.snake);
     }
+    rerender();
+  }, [finish, rerender]);
 
-    setSnake(newSnake);
+  const startLoop = useCallback(() => {
+    stopLoop();
+    timerRef.current = window.setInterval(tick, TICK_MS);
+  }, [stopLoop, tick]);
+
+  const start = useCallback(
+    (direction?: Point) => {
+      const game = createGame();
+      game.status = "running";
+      game.food = randomFood(game.snake);
+      // The snake starts facing right; turning straight back would kill it.
+      if (direction && !opposite(direction, game.direction)) game.direction = direction;
+      game.startedAt = performance.now();
+      gameRef.current = game;
+      startLoop();
+      rerender();
+    },
+    [rerender, startLoop]
+  );
+
+  const pause = useCallback(() => {
+    const game = gameRef.current;
+    if (game.status !== "running") return;
+    stopLoop();
+    game.status = "paused";
+    game.pausedAt = performance.now();
+    game.queue = [];
+    rerender();
+  }, [rerender, stopLoop]);
+
+  const resume = useCallback(() => {
+    const game = gameRef.current;
+    if (game.status !== "paused") return;
+    game.startedAt += performance.now() - game.pausedAt;
+    game.status = "running";
+    startLoop();
+    rerender();
+  }, [rerender, startLoop]);
+
+  const turn = useCallback(
+    (direction: Point) => {
+      const game = gameRef.current;
+
+      if (game.status === "idle") return start(direction);
+      if (game.status === "over" || game.status === "won") {
+        if (performance.now() - game.endedAt > RESTART_COOLDOWN_MS) start(direction);
+        return;
+      }
+      if (game.status === "paused") resume();
+
+      const last = game.queue[game.queue.length - 1] ?? game.direction;
+      if (same(direction, last) || opposite(direction, last)) return;
+      if (game.queue.length < MAX_QUEUED_TURNS) game.queue.push(direction);
+    },
+    [resume, start]
+  );
+
+  const flashArrow = useCallback((direction: Point) => {
+    const arrow = ARROWS.find((item) => same(item.direction, direction));
+    setPressed(arrow?.name ?? null);
+  }, []);
+
+  // Keyboard: arrows or WASD to steer, Space to pause/resume or start.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (isTypingTarget(event.target)) return;
+      // Ignore input while the game is hidden (small screens).
+      if (!rootRef.current || rootRef.current.offsetParent === null) return;
+
+      const direction = DIRECTION_BY_KEY[event.key] ?? DIRECTION_BY_KEY[event.code];
+      if (direction) {
+        event.preventDefault();
+        flashArrow(direction);
+        turn(direction);
+        return;
+      }
+
+      if (event.code === "Space" && !(event.target instanceof HTMLButtonElement)) {
+        event.preventDefault();
+        const { status } = gameRef.current;
+        if (status === "running") pause();
+        else if (status === "paused") resume();
+        else start();
+      }
+    };
+    const onKeyUp = () => setPressed(null);
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
+    };
+  }, [flashArrow, pause, resume, start, turn]);
+
+  // Pause when the tab or window loses focus instead of dying off-screen.
+  useEffect(() => {
+    const onHide = () => {
+      if (document.hidden) pause();
+    };
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("blur", pause);
+    return () => {
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("blur", pause);
+    };
+  }, [pause]);
+
+  useEffect(() => {
+    setBestTime(readBestTime());
+    return stopLoop;
+  }, [stopLoop]);
+
+  // Touch and mouse: swipe on the board to steer, tap to start or resume.
+  const onPointerDown = (event: React.PointerEvent) => {
+    pointerStart.current = { x: event.clientX, y: event.clientY };
   };
 
-  const checkCollision = (position: Position): boolean => {
-    return (
-      position.x < 0 ||
-      position.y < 0 ||
-      position.x >= BOARD_WIDTH ||
-      position.y >= BOARD_HEIGHT ||
-      snake.some(
-        (segment) => segment.x === position.x && segment.y === position.y
-      )
-    );
-  };
-
-  const endGame = (win = false) => {
-    setIsGameOver(true);
-    setGameStarted(false);
-    // Убираем setDirection({ x: 1, y: 0 }), чтобы голова не поворачивалась на восток после смерти
-    if (win && startTime) {
-      setElapsedTime(Date.now() - startTime);
+  const onPointerUp = (event: React.PointerEvent) => {
+    const from = pointerStart.current;
+    pointerStart.current = null;
+    if (!from) return;
+    const dx = event.clientX - from.x;
+    const dy = event.clientY - from.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 16) {
+      const { status } = gameRef.current;
+      if (status === "paused") resume();
+      else if (status !== "running") turn(RIGHT);
+      return;
     }
+    turn(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? RIGHT : LEFT) : dy > 0 ? DOWN : UP);
   };
 
-  const resetGame = () => {
-    setSnake(FIXED_INITIAL_SNAKE);
-    setFood(FIXED_INITIAL_FOOD);
-    setDirection({ x: 1, y: 0 });
-    setGameStarted(false);
-    setIsGameOver(false);
-    setFoodEaten(0);
-    setElapsedTime(0);
-    setStartTime(null);
-  };
+  const game = gameRef.current;
+  const head = game.snake[0];
+  const headRadius = same(game.direction, RIGHT)
+    ? "0 50% 50% 0"
+    : same(game.direction, LEFT)
+    ? "50% 0 0 50%"
+    : same(game.direction, DOWN)
+    ? "0 0 50% 50%"
+    : "50% 50% 0 0";
 
-  const getNewDirection = (
-    key: string,
-    currentDirection: Position
-  ): Position | null => {
-    switch (key) {
-      case "ArrowUp":
-        return { x: 0, y: -1 };
-      case "ArrowDown":
-        return { x: 0, y: 1 };
-      case "ArrowLeft":
-        return { x: -1, y: 0 };
-      case "ArrowRight":
-        return { x: 1, y: 0 };
-      default:
-        return null;
-    }
-  };
-
-  const isValidDirectionChange = (
-    newDirection: Position,
-    currentDirection: Position
-  ): boolean => {
-    // Запрещаем движение в обратную сторону
-    return !(
-      (newDirection.x === -currentDirection.x && newDirection.x !== 0) ||
-      (newDirection.y === -currentDirection.y && newDirection.y !== 0)
-    );
-  };
-
-  const getOpacity = (index: number, length: number) => {
-    return 1 - index / length;
-  };
-
-  const getBorderRadius = (index: number): string => {
-    if (index !== 0) return "0";
-
-    if (direction?.x === 1) return "0 50% 50% 0";
-    if (direction?.x === -1) return "50% 0 0 50%";
-    if (direction?.y === 1) return "0 0 50% 50%";
-    if (direction?.y === -1) return "50% 50% 0 0";
-    return "0";
-  };
+  const cellStyle = (point: Point): React.CSSProperties => ({
+    left: `${(point.x / COLS) * 100}%`,
+    top: `${(point.y / ROWS) * 100}%`,
+    width: `${100 / COLS}%`,
+    height: `${100 / ROWS}%`,
+  });
 
   return (
-    <div className='snake-game'>
-      <div className='game-board' ref={gameBoardRef}>
-        {snake.map((segment, index) => (
+    <div className='snake-game' ref={rootRef}>
+      <div
+        className='game-board'
+        role='application'
+        aria-label='Snake game: use the arrow keys or WASD to steer, Space to pause'
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={() => (pointerStart.current = null)}
+      >
+        {game.snake.map((part, index) => (
           <div
             key={index}
-            className='snake-segment'
+            className={`snake-segment ${index === 0 ? "head" : ""}`}
             style={{
-              left: `${segment.x * SEGMENT_SIZE}px`,
-              top: `${segment.y * SEGMENT_SIZE}px`,
-              backgroundColor: `rgba(67, 217, 173, ${getOpacity(
-                index,
-                snake.length
-              )})`,
-              borderRadius: getBorderRadius(index),
+              ...cellStyle(part),
+              backgroundColor: `rgba(67, 217, 173, ${1 - (index / game.snake.length) * 0.85})`,
+              borderRadius: index === 0 ? headRadius : undefined,
             }}
-          ></div>
+          />
         ))}
-        {food && (
-          <div
-            className='food'
-            style={{
-              left: `${food.x * SEGMENT_SIZE}px`,
-              top: `${food.y * SEGMENT_SIZE}px`,
-            }}
-          ></div>
+        <div className='food' style={cellStyle(game.food)} />
+
+        {game.status === "idle" && (
+          <button type='button' className='start-button' onClick={() => start()}>
+            start-game
+          </button>
         )}
+
+        {game.status === "paused" && (
+          <div className='game-overlay'>
+            <p>// paused</p>
+            <button type='button' className='restart-button' onClick={resume}>
+              _resume
+            </button>
+          </div>
+        )}
+
+        {(game.status === "over" || game.status === "won") && (
+          <div className='game-overlay'>
+            <p>
+              {game.status === "won"
+                ? `WELL DONE! Your time: ${seconds(game.elapsed)} s`
+                : "GAME OVER!"}
+            </p>
+            {game.status === "won" && bestTime !== null && (
+              <p className='best-time'>// best: {seconds(bestTime)} s</p>
+            )}
+            <button type='button' className='restart-button' onClick={() => start()}>
+              _play-again
+            </button>
+          </div>
+        )}
+
+        <span className='sr-only' aria-live='polite'>
+          {game.status === "over"
+            ? "Game over"
+            : game.status === "won"
+            ? `You won in ${seconds(game.elapsed)} seconds`
+            : `Head at column ${head.x + 1}, row ${head.y + 1}`}
+        </span>
       </div>
+
       <div className='game-info'>
         <div className='controls'>
           <div className='description'>
             <p>// use keyboard</p>
-            <p>// arrows to play</p>
+            <p>// arrows or WASD</p>
+            <p>// space to pause</p>
           </div>
           <div className='arrow-container'>
-            <div className='arrow'>
-              <i className='ri-arrow-up-s-fill'></i>
-            </div>
-            <div className='arrow'>
-              <i className='ri-arrow-left-s-fill'></i>
-            </div>
-            <div className='arrow'>
-              <i className='ri-arrow-down-s-fill'></i>
-            </div>
-            <div className='arrow'>
-              <i className='ri-arrow-right-s-fill'></i>
-            </div>
+            {ARROWS.map((arrow) => (
+              <button
+                key={arrow.name}
+                type='button'
+                className={`arrow ${pressed === arrow.name ? "pressed" : ""}`}
+                aria-label={`Turn ${arrow.name}`}
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  setPressed(arrow.name);
+                  turn(arrow.direction);
+                }}
+                onPointerUp={() => setPressed(null)}
+                onPointerLeave={() => setPressed(null)}
+              >
+                <i className={arrow.icon} aria-hidden='true'></i>
+              </button>
+            ))}
           </div>
         </div>
 
         <div className='food-count-container'>
           <p className='description'>// food left</p>
           <div className='food-count'>
-            {Array.from({ length: WINNING_FOOD_COUNT }).map((_, index) => (
+            {Array.from({ length: FOOD_TO_WIN }, (_, index) => (
               <div
                 key={index}
-                className={`food-indicator ${index < foodEaten ? "eaten" : ""}`}
-              ></div>
+                className={`food-indicator ${index < game.eaten ? "eaten" : ""}`}
+              />
             ))}
           </div>
+          {bestTime !== null && <p className='description'>// best: {seconds(bestTime)} s</p>}
         </div>
       </div>
-      {!gameStarted && !isGameOver && (
-        <button className='start-button' onClick={startGame}>
-          start-game
-        </button>
-      )}
-      {isGameOver && (
-        <div className='game-over'>
-          <p>
-            {foodEaten === WINNING_FOOD_COUNT
-              ? `WELL DONE! Your time: ${(elapsedTime / 1000).toFixed(
-                  2
-                )} seconds`
-              : "GAME OVER!"}
-          </p>
-          <button className='restart-button' onClick={resetGame}>
-            _restart
-          </button>
-        </div>
-      )}
     </div>
   );
 };
