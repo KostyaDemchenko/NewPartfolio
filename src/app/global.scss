@@ -3,17 +3,23 @@
 
 :root {
   // FONTS
-  --font-main: "Fira Code", monospace;
+  // --font-fira-code is set in _app.tsx by next/font (self-hosted Fira Code).
+  --font-main: var(--font-fira-code, "Fira Code"), monospace;
 
   // COLORS
   --color-primary-black: #01080e;
   --color-primary-green: #011627;
   --color-primary-blue: #011221;
 
-  --color-secondary-grey: #607b96;
+  // Text greys and blues are tuned to at least 4.5:1 (WCAG AA) on every page background.
+  --color-secondary-grey: #6c86a1;
   --color-secondary-green: #3c9d93;
-  --color-secondary-blue: #4d5bce;
+  --color-secondary-blue: #4d5bce; // decorative only (glow, scrollbar)
+  --color-text-blue: #717cd8;
   --color-secondary-white: #e5e9f0;
+
+  --color-tag: #2a3f55; // chips and secondary buttons under light text
+  --color-field-border: #4a6380; // form fields, 3:1 against the panel
 
   --color-accent-orange: #fea55f;
   --color-accent-green: #43d9ad;
@@ -102,7 +108,19 @@ span {
 }
 
 .blue {
-  color: var(--color-secondary-blue);
+  color: var(--color-text-blue);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .green {

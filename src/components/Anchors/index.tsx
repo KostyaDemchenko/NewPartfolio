@@ -1,4 +1,5 @@
 import Accordion from "@/src/components/Accordion";
+import EmailLink from "@/src/components/EmailLink";
 import { CONTACTS, CV_PDF_PATH } from "@/src/data/contacts";
 import "./style.scss";
 
@@ -34,10 +35,7 @@ const Anchors = () => {
       <Accordion title='contact' show>
         <ul>
           <li>
-            <a href={`mailto:${CONTACTS.email}`}>
-              <i className='ri-mail-fill' aria-hidden='true'></i>
-              {CONTACTS.email}
-            </a>
+            <EmailLink />
           </li>
           <li>
             <a href={CONTACTS.phone.href}>

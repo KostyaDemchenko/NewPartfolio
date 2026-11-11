@@ -54,6 +54,26 @@
           word-wrap: break-word;
           overflow-wrap: break-word;
           white-space: pre-wrap;
+
+          // Same palette as the code lines on the home page.
+          .tok-kw {
+            color: var(--color-text-blue);
+          }
+          .tok-id {
+            color: var(--color-secondary-green);
+          }
+          .tok-fn {
+            color: var(--color-accent-blue);
+          }
+          .tok-prop {
+            color: var(--color-accent-purple);
+          }
+          .tok-str {
+            color: var(--color-accent-orange);
+          }
+          .tok-punct {
+            color: var(--color-secondary-white);
+          }
         }
       }
     }

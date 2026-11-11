@@ -5,6 +5,7 @@ import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import Accordion from "@/src/components/Accordion";
 import ContactForm from "@/src/components/ContactForm";
+import EmailLink from "@/src/components/EmailLink";
 import RealTimePreview from "@/src/components/RealTimePreview";
 import { CONTACTS } from "@/src/data/contacts";
 
@@ -33,10 +34,7 @@ export default function ContactMe() {
             <Accordion title='contact' show>
               <ul>
                 <li>
-                  <a href={`mailto:${CONTACTS.email}`}>
-                    <i className='ri-mail-fill' aria-hidden='true'></i>
-                    {CONTACTS.email}
-                  </a>
+                  <EmailLink />
                 </li>
                 <li>
                   <a href={CONTACTS.phone.href}>

@@ -7,6 +7,8 @@ interface HeadProps {
   /** Path of the page, e.g. "/projects"; used for canonical and og:url. */
   path?: string;
   pageImage?: string;
+  /** Keep the page out of search results (the 404 page). */
+  noIndex?: boolean;
 }
 
 const HeadComponent: React.FC<HeadProps> = ({
@@ -14,6 +16,7 @@ const HeadComponent: React.FC<HeadProps> = ({
   pageDescription,
   path = "/",
   pageImage = "/img/page_image_prev.jpg",
+  noIndex = false,
 }) => {
   const title = `${pageTitle} | Kostiantyn Demchenko, Front-End Developer`;
   const url = `${SITE_URL}${path === "/" ? "" : path}`;
@@ -25,7 +28,7 @@ const HeadComponent: React.FC<HeadProps> = ({
       <meta name='description' content={pageDescription} />
       <meta name='viewport' content='width=device-width, initial-scale=1' />
       <meta name='theme-color' content='#01080e' />
-      <link rel='canonical' href={url} />
+      {noIndex ? <meta name='robots' content='noindex' /> : <link rel='canonical' href={url} />}
 
       <meta property='og:title' content={title} />
       <meta property='og:description' content={pageDescription} />

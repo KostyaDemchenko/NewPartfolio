@@ -142,7 +142,7 @@
         @include flex(center, center);
         @include f-direction(row);
         gap: 6px;
-        background-color: var(--color-secondary-grey);
+        background-color: var(--color-tag);
         color: var(--color-secondary-white);
         padding: 4px 8px;
         border-radius: 4px;

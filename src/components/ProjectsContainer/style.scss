@@ -52,7 +52,8 @@
     }
 
     &.active {
-      background-color: var(--color-secondary-grey);
+      background-color: var(--color-tag);
+      border-color: var(--color-accent-green);
     }
   }
 }

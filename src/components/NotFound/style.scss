@@ -1,0 +1,65 @@
+@import "@/src/app/shortSyles.scss";
+
+.not-found {
+  @include flex(center, flex-start);
+  @include f-direction(column);
+
+  width: 100%;
+  max-width: 640px;
+  padding: 0 20px;
+  gap: 14px;
+
+  &__comment {
+    color: var(--color-secondary-grey);
+    font-size: 16px;
+  }
+
+  &__title {
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1.1;
+
+    @include tablet {
+      font-size: 40px;
+    }
+
+    @include mobile {
+      font-size: 32px;
+    }
+  }
+
+  &__code {
+    margin-top: 10px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+
+    @include mobile {
+      font-size: 14px;
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+
+    a {
+      padding: 10px 14px;
+      border: 1px solid var(--color-field-border);
+      border-radius: 8px;
+      color: var(--color-secondary-white);
+      font-size: 14px;
+      transition: border-color 0.2s, color 0.2s;
+
+      &:hover,
+      &:focus-visible {
+        border-color: var(--color-accent-green);
+        color: var(--color-accent-green);
+      }
+    }
+  }
+}
